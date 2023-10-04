@@ -44,3 +44,9 @@ function populateCameras() {
         });
     });
 }
+
+let deviceId = "default";
+cameraSelect.onchange = _ => {
+    deviceId = cameraSelect.selectedOptions[0].id;
+    targetDevice = deviceId
+};
