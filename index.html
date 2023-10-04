@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>web-rtc sample</title>
-    <script src="remote_stream.js"></script>
+    <script src="camera_stream.js"></script>
 </head>
 
 <body>
     <div>
         <h1>web-rtc</h1>
-        <div id="local_streaming">
-            <video id="video" width="480" height="320"></video>
-        </div>
+    </div>
+    <div id="local_streaming">
+        <video id="video" width="480" height="320"></video>
+    </div>
+    <div>
+        <input type="button" value="get capture" onclick="cameraInitSmartphoneSupport()">
     </div>
 </body>
 
