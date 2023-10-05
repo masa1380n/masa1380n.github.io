@@ -9,8 +9,8 @@ const Peer = window.Peer;
     const deleteCapturteTrigger = document.getElementById('js-deletecapture-trigger');
     const callTrigger = document.getElementById('js-call-trigger');
     const closeTrigger = document.getElementById('js-close-trigger');
-    const localText = document.getElementById('js-local-text');
-    const sendTrigger = document.getElementById('js-send-trigger');
+    // const localText = document.getElementById('js-local-text');
+    // const sendTrigger = document.getElementById('js-send-trigger');
     const remoteVideo = document.getElementById('js-remote-stream');
     const remoteId = document.getElementById('js-remote-id');
     const messages = document.getElementById('js-messages');
@@ -24,7 +24,6 @@ const Peer = window.Peer;
     let mediaConnection = null;
     let dataConnection = null;
     let videoTrack;
-    var videoTrackSettings;
 
     /*const peer = (window.peer = new Peer(userName, {
       key: API_KEY,
@@ -113,7 +112,6 @@ const Peer = window.Peer;
             videoTrackSettings = videoTrack.getSettings();
             capabilities = videoTrack.getCapabilities();
             // videoTrack.contentHint = document.getElementById("js-video-content").value;
-            // document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
         })
     })
 
@@ -157,7 +155,7 @@ const Peer = window.Peer;
 
             dataConnection.once('open', async () => {
                 messages.textContent += `=== DataConnection has been opened ===\n`;
-                sendTrigger.addEventListener('click', onClickSend);
+                // sendTrigger.addEventListener('click', onClickSend);
                 continueTrigger.addEventListener('click', onClickContinue);
                 attemptApply.addEventListener('click', onClickAttemptApply);
                 forwardApply.addEventListener('click', onClickForwardApply);
@@ -169,19 +167,19 @@ const Peer = window.Peer;
 
             dataConnection.once('close', () => {
                 messages.textContent += `=== DataConnection has been closed ===\n`;
-                sendTrigger.removeEventListener('click', onClickSend);
+                // sendTrigger.removeEventListener('click', onClickSend);
                 continueTrigger.removeEventListener('click', onClickContinue);
                 attemptApply.removeEventListener('click', onClickAttemptApply);
                 forwardApply.removeEventListener('click', onClickForwardApply);
             });
 
-            function onClickSend() {
-                const data = localText.value;
-                dataConnection.send(data);
+            // function onClickSend() {
+            //     const data = localText.value;
+            //     dataConnection.send(data);
 
-                messages.textContent += `You: ${data}\n`;
-                localText.value = '';
-            }
+            //     messages.textContent += `You: ${data}\n`;
+            //     localText.value = '';
+            // }
 
             function onClickContinue() {
                 messages.textContent += `continue pruning!!\n`;
@@ -247,7 +245,7 @@ const Peer = window.Peer;
             peer.on('connection', dataConnection => {
                 dataConnection.once('open', async () => {
                     messages.textContent += `=== DataConnection has been opened ===\n`;
-                    sendTrigger.addEventListener('click', onClickSend);
+                    // sendTrigger.addEventListener('click', onClickSend);
                     // continueTrigger.addEventListener('click', onClickContinue);
                     // attemptApply.addEventListener('click', onClickAttemptApply);
                     // forwardApply.addEventListener('click', onClickForwardApply);
@@ -259,7 +257,7 @@ const Peer = window.Peer;
 
                 dataConnection.once('close', () => {
                     messages.textContent += `=== DataConnection has been closed ===\n`;
-                    sendTrigger.removeEventListener('click', onClickSend);
+                    // sendTrigger.removeEventListener('click', onClickSend);
                     // continueTrigger.removeEventListener('click', onClickContinue);
                     // attemptApply.removeEventListener('click', onClickAttemptApply);
                     // forwardApply.removeEventListener('click', onClickForwardApply);
@@ -270,13 +268,13 @@ const Peer = window.Peer;
                     once: true,
                 });
 
-                function onClickSend() {
-                    const data = localText.value;
-                    dataConnection.send(data);
+                // function onClickSend() {
+                //     const data = localText.value;
+                //     dataConnection.send(data);
 
-                    messages.textContent += `You: ${data}\n`;
-                    localText.value = '';
-                }
+                //     messages.textContent += `You: ${data}\n`;
+                //     localText.value = '';
+                // }
 
                 // function onClickContinue() {
                 //     messages.textContent += `continue pruning!!\n`;
