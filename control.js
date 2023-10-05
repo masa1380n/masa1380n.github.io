@@ -23,6 +23,13 @@ const Peer = window.Peer;
     let dataConnection = null;
     let videoTrack;
 
+    function data(ifcontinue, ifattempt, ifforward, text){
+        this.ifcontinue = ifcontinue;
+        this.ifattempt = ifattempt;
+        this.ifforward = ifforward;
+        this.text = text;
+    }
+
     makePeerTrigger.addEventListener('click', () => {
         var userName = document.getElementById('js-your-id').value;
         console.log(userName);
@@ -169,8 +176,8 @@ const Peer = window.Peer;
             // }
 
             function onClickContinue() {
-                const data = `continue pruning!!\n`;
-                messages.textContent += `continue pruning!!\n`;
+                new data(true, 0, 0, `continue pruning!!\n`);
+                messages.textContent += `${data.text}`;
                 dataConnection.send(data);
 
                 //ここにcontinueクリックしたときの処理
@@ -179,8 +186,8 @@ const Peer = window.Peer;
 
             function onClickAttemptApply() {
                 const val = attempts.value;
-                const data = `attempt ${val} more times!!\n`;
-                messages.textContent += `attempt ${val} more times!!\n`;
+                new data(false, val, 0, `attempt ${val} more times!!\n`);
+                messages.textContent += `${data.text}`;
                 dataConnection.send(data);
 
                 //ここに"Attempt"を"apply"したときの処理
@@ -190,9 +197,9 @@ const Peer = window.Peer;
 
             function onClickForwardApply() {
                 const val = forward.value;
-                const data = `go ${val} m forward!!\n`;
+                new data(false, 0, val, `go ${val} m forward!!\n`);
+                messages.textContent += `${data.text}`;
                 dataConnection.send(data);
-                messages.textContent += `${data}`;
 
                 //ここに"Forward"を"apply"したときの処理
 
@@ -244,7 +251,7 @@ const Peer = window.Peer;
                 });
 
                 dataConnection.on('data', data => {
-                    messages.textContent += `${data}\n`;
+                    messages.textContent += `${data.text}`;
                 });
 
                 dataConnection.once('close', () => {
