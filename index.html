@@ -20,16 +20,12 @@
 
     <div class="local-stream">
       <video id="js-local-stream" width="480" height="320"></video><br>
-      <p>Estimated camera latency: <span id="js-estimated-latency"></span> sec</p>
+      <!-- <p>Estimated camera latency: <span id="js-estimated-latency"></span> sec</p> -->
       <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
         <button id="js-makepeer-trigger">Make Peer</button>
       <p>Your ID: <span id="js-local-id"></span></p>
 
       SelectDevice:<select id="cameraSelect" disabled> </select><br>
-      <!-- VideoHeight:<input type="number" id="video-height" max="4320" value="1080"><br>
-      VideoWidth:<input type="number" id="video-width" max="7680" value="1920"><br>
-      FrameRate:<input type="number" id="video-rate" min="1" max="60" value="30">Hz<br> -->
-      BitRate:<input type="number" id="js-video-byte" min="500" value="3000">kbps<br>
       <button id="js-startcapture-trigger">Get Capture</button><br>
       <button id="js-deletecapture-trigger">Delete Capture Source</button><br>
       <input type="text" placeholder="Remote Peer ID" id="js-remote-id">

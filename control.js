@@ -108,7 +108,7 @@ const Peer = window.Peer;
                 videoTrackSettings = videoTrack.getSettings();
                 capabilities = videoTrack.getCapabilities();
                 // videoTrack.contentHint = document.getElementById("js-video-content").value;
-                document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
+                // document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
             })
     })
 
@@ -177,21 +177,21 @@ const Peer = window.Peer;
         }
     });
 
-    function estimateMediaLatency() {
-        // console.log("local stream is null");
-        if (localStream != null) {
-            //var videoTrackOr = localStream.getVideoTrack()[0];
-            //var videoTrackSettings = videoTrackOr.getSettings();
-            //console.log("null de ha aniyo");
-            if ("latency" in videoTrackSettings) {
-                // local.getTracks;
-                document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
-                //console.log("latency is arimasu");
-            }
-        }
-    }
+    // function estimateMediaLatency() {
+    //     // console.log("local stream is null");
+    //     if (localStream != null) {
+    //         //var videoTrackOr = localStream.getVideoTrack()[0];
+    //         //var videoTrackSettings = videoTrackOr.getSettings();
+    //         //console.log("null de ha aniyo");
+    //         if ("latency" in videoTrackSettings) {
+    //             // local.getTracks;
+    //             // document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
+    //             //console.log("latency is arimasu");
+    //         }
+    //     }
+    // }
 
-    setInterval(estimateMediaLatency, 100);
+    // setInterval(estimateMediaLatency, 100);
 
     // Register callee handler
     function waitCall() {
