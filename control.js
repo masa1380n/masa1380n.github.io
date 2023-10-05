@@ -178,9 +178,10 @@ const Peer = window.Peer;
             }
 
             function onClickAttemptApply() {
-                const data = attempts.value;
+                const val = attempts.value;
+                const data = `attempt ${val} more times!!\n`;
+                messages.textContent += `attempt ${val} more times!!\n`;
                 dataConnection.send(data);
-                messages.textContent += `attempt ${data} more times!!\n`;
 
                 //ここに"Attempt"を"apply"したときの処理
 
@@ -188,9 +189,11 @@ const Peer = window.Peer;
             }
 
             function onClickForwardApply() {
-                const data = forward.value;
+                const val = forward.value;
+                const data = `go ${data} m forward!!\n`;
                 dataConnection.send(data);
-                messages.textContent += `go ${data} m forward!!\n`;
+                messages.textContent += `${data}`;
+
                 //ここに"Forward"を"apply"したときの処理
 
                 forward.value = '0';
