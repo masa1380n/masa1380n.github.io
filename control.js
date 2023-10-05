@@ -197,7 +197,7 @@ const Peer = window.Peer;
 
                 //ここに"Attempt"を"apply"したときの処理
 
-                attempts.value = '';
+                attempts.value = '0';
             }
 
             function onClickForwardApply() {
@@ -206,6 +206,7 @@ const Peer = window.Peer;
                 messages.textContent += `go ${data} m forward!!\n`;
                 //ここに"Forward"を"apply"したときの処理
 
+                forward.value = '0';
             }
 
             closeTrigger.addEventListener('click', () => mediaConnection.close(true));
@@ -247,9 +248,9 @@ const Peer = window.Peer;
                 dataConnection.once('open', async () => {
                     messages.textContent += `=== DataConnection has been opened ===\n`;
                     sendTrigger.addEventListener('click', onClickSend);
-                    continueTrigger.addEventListener('click', onClickContinue);
-                    attemptApply.addEventListener('click', onClickAttemptApply);
-                    forwardApply.addEventListener('click', onClickForwardApply);
+                    // continueTrigger.addEventListener('click', onClickContinue);
+                    // attemptApply.addEventListener('click', onClickAttemptApply);
+                    // forwardApply.addEventListener('click', onClickForwardApply);
                 });
 
                 dataConnection.on('data', data => {
@@ -259,9 +260,9 @@ const Peer = window.Peer;
                 dataConnection.once('close', () => {
                     messages.textContent += `=== DataConnection has been closed ===\n`;
                     sendTrigger.removeEventListener('click', onClickSend);
-                    continueTrigger.removeEventListener('click', onClickContinue);
-                    attemptApply.removeEventListener('click', onClickAttemptApply);
-                    forwardApply.removeEventListener('click', onClickForwardApply);
+                    // continueTrigger.removeEventListener('click', onClickContinue);
+                    // attemptApply.removeEventListener('click', onClickAttemptApply);
+                    // forwardApply.removeEventListener('click', onClickForwardApply);
                 });
 
                 // Register closing handler
@@ -277,30 +278,31 @@ const Peer = window.Peer;
                     localText.value = '';
                 }
 
-                function onClickContinue() {
-                    messages.textContent += `continue pruning!!\n`;
+                // function onClickContinue() {
+                //     messages.textContent += `continue pruning!!\n`;
 
-                    //ここにcontinueクリックしたときの処理
+                //     //ここにcontinueクリックしたときの処理
 
-                }
+                // }
 
-                function onClickAttemptApply() {
-                    const data = attempts.value;
-                    dataConnection.send(data);
-                    messages.textContent += `attempt ${data} more times!!\n`;
+                // function onClickAttemptApply() {
+                //     const data = attempts.value;
+                //     dataConnection.send(data);
+                //     messages.textContent += `attempt ${data} more times!!\n`;
 
-                    //ここに"Attempt"を"apply"したときの処理
+                //     //ここに"Attempt"を"apply"したときの処理
 
-                    attempts.value = '';
-                }
+                //     attempts.value = '0';
+                // }
 
-                function onClickForwardApply() {
-                    const data = forward.value;
-                    dataConnection.send(data);
-                    messages.textContent += `go ${data} m forward!!\n`;
-                    //ここに"Forward"を"apply"したときの処理
+                // function onClickForwardApply() {
+                //     const data = forward.value;
+                //     dataConnection.send(data);
+                //     messages.textContent += `go ${data} m forward!!\n`;
+                //     //ここに"Forward"を"apply"したときの処理
 
-                }
+                //     forward.value = '0';
+                // }
 
             });
             peer.on('error', console.error);
