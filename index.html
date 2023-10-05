@@ -2,20 +2,26 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>web-rtc sample</title>
-    <script src="camera_stream.js"></script>
+    <title>pruning assist system</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="control.js"></script>
 </head>
 
 <body>
     <div>
-        <h1>web-rtc</h1>
+        <h1>Pruning assist system</h1>
     </div>
-    <div id="local_streaming">
+    <div id="camera_streaming">
         <video id="video" width="480" height="320"></video>
     </div>
     <div>
-        SelectDevice:<select id="cameraSelect" disabled> </select><br>
+        <!--SelectDevice:<select id="cameraSelect" disabled> </select><br>-->
         <input type="button" value="get capture" onclick="cameraInit()">
+    </div>
+    <div id="command">
+        <input type="button" value="continue"><br>
+        Times:<input type="number" id="times" value="0"><input type="button" value="apply"><br>
+        Forward:<input type="number" id="forward" value="0">[m]<input type="button" value="apply">
     </div>
 </body>
 
