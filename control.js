@@ -190,7 +190,7 @@ const Peer = window.Peer;
 
             function onClickForwardApply() {
                 const val = forward.value;
-                const data = `go ${data} m forward!!\n`;
+                const data = `go ${val} m forward!!\n`;
                 dataConnection.send(data);
                 messages.textContent += `${data}`;
 
