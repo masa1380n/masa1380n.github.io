@@ -9,8 +9,6 @@ const Peer = window.Peer;
     const deleteCapturteTrigger = document.getElementById('js-deletecapture-trigger');
     const callTrigger = document.getElementById('js-call-trigger');
     const closeTrigger = document.getElementById('js-close-trigger');
-    // const localText = document.getElementById('js-local-text');
-    // const sendTrigger = document.getElementById('js-send-trigger');
     const remoteVideo = document.getElementById('js-remote-stream');
     const remoteId = document.getElementById('js-remote-id');
     const messages = document.getElementById('js-messages');
@@ -24,11 +22,6 @@ const Peer = window.Peer;
     let mediaConnection = null;
     let dataConnection = null;
     let videoTrack;
-
-    /*const peer = (window.peer = new Peer(userName, {
-      key: API_KEY,
-      debug: 3,
-    }));*/
 
     makePeerTrigger.addEventListener('click', () => {
         var userName = document.getElementById('js-your-id').value;
@@ -120,7 +113,7 @@ const Peer = window.Peer;
         localVideo.srcObject = null;
     })
 
-    // Register caller handler
+    // client
     callTrigger.addEventListener('click', () => {
 
         if (peer == null) {
@@ -129,18 +122,12 @@ const Peer = window.Peer;
         if (peer != null) {
             // Note that you need to ensure the peer has connected to signaling server
             // before using methods of peer instance.
-            /*if (!peer.open) {
-              return;
-            }*/
 
-            // videoCallOptions.videoBandwidth = Number(document.getElementById('js-video-byte').value);
-            // videoCallOptions.videoCodec = String(document.getElementById('js-video-codec').value);
-            //console.log(videoCallOptions);
             mediaConnection = peer.call(remoteId.value, localStream, videoCallOptions);
 
             mediaConnection.on('stream', async (stream) => {
                 console.log('MORATTAYO')
-                // Render remote stream for caller
+                // Render remote stream for client
                 remoteVideo.srcObject = stream;
                 remoteVideo.playsInline = true;
                 await remoteVideo.play().catch(console.error);
@@ -162,7 +149,7 @@ const Peer = window.Peer;
             });
 
             dataConnection.on('data', data => {
-                messages.textContent += `${dataConnection.remoteId}: ${data}\n`;
+                // messages.textContent += `${data}\n`;
             });
 
             dataConnection.once('close', () => {
@@ -182,7 +169,9 @@ const Peer = window.Peer;
             // }
 
             function onClickContinue() {
+                const data = `continue pruning!!\n`;
                 messages.textContent += `continue pruning!!\n`;
+                dataConnection.send(data);
 
                 //ここにcontinueクリックしたときの処理
 
@@ -252,7 +241,7 @@ const Peer = window.Peer;
                 });
 
                 dataConnection.on('data', data => {
-                    messages.textContent += `${dataConnection.remoteId}: ${data}\n`;
+                    messages.textContent += `${data}\n`;
                 });
 
                 dataConnection.once('close', () => {
