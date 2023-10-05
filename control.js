@@ -14,6 +14,11 @@ const Peer = window.Peer;
     const remoteVideo = document.getElementById('js-remote-stream');
     const remoteId = document.getElementById('js-remote-id');
     const messages = document.getElementById('js-messages');
+    const continueTrigger = document.getElementById('js-continue');
+    const attempts = document.getElementById('js-attempts');
+    const attemptApply = document.getElementById('js-attempt-apply');
+    const forward = document.getElementById('js-forward');
+    const forwardApply = document.getElementById('js-forward-apply');
     let peer = null
     let targetDevice = null;
     let mediaConnection = null;
@@ -91,25 +96,25 @@ const Peer = window.Peer;
     let localStream = null;
 
     captureTrigger.addEventListener('click', () => {
-            navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: {
-                    // width: Number(document.getElementById('video-width').value),
-                    // height: Number(document.getElementById('video-height').value),
-                    // frameRate: Number(document.getElementById('video-rate').value),
-                    deviceId: String(targetDevice),
-                }
-            }).then(function (mediaStream) {
-                localStream = mediaStream;
-                localVideo.srcObject = mediaStream;
-                localVideo.playsInline = true;
-                localVideo.play().catch(console.error);
-                videoTrack = localStream.getTracks()[1];//[0]is audio,[1]is video
-                videoTrackSettings = videoTrack.getSettings();
-                capabilities = videoTrack.getCapabilities();
-                // videoTrack.contentHint = document.getElementById("js-video-content").value;
-                // document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
-            })
+        navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+                // width: Number(document.getElementById('video-width').value),
+                // height: Number(document.getElementById('video-height').value),
+                // frameRate: Number(document.getElementById('video-rate').value),
+                deviceId: String(targetDevice),
+            }
+        }).then(function (mediaStream) {
+            localStream = mediaStream;
+            localVideo.srcObject = mediaStream;
+            localVideo.playsInline = true;
+            localVideo.play().catch(console.error);
+            videoTrack = localStream.getTracks()[1];//[0]is audio,[1]is video
+            videoTrackSettings = videoTrack.getSettings();
+            capabilities = videoTrack.getCapabilities();
+            // videoTrack.contentHint = document.getElementById("js-video-content").value;
+            // document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
+        })
     })
 
     deleteCapturteTrigger.addEventListener('click', () => {
@@ -153,6 +158,9 @@ const Peer = window.Peer;
             dataConnection.once('open', async () => {
                 messages.textContent += `=== DataConnection has been opened ===\n`;
                 sendTrigger.addEventListener('click', onClickSend);
+                continueTrigger.addEventListener('click', onClickContinue);
+                attemptApply.addEventListener('click', onClickAttemptApply);
+                forwardApply.addEventListener('click', onClickForwardApply);
             });
 
             dataConnection.on('data', data => {
@@ -162,7 +170,9 @@ const Peer = window.Peer;
             dataConnection.once('close', () => {
                 messages.textContent += `=== DataConnection has been closed ===\n`;
                 sendTrigger.removeEventListener('click', onClickSend);
-
+                continueTrigger.removeEventListener('click', onClickContinue);
+                attemptApply.removeEventListener('click', onClickAttemptApply);
+                forwardApply.removeEventListener('click', onClickForwardApply);
             });
 
             function onClickSend() {
@@ -173,25 +183,34 @@ const Peer = window.Peer;
                 localText.value = '';
             }
 
+            function onClickContinue() {
+                messages.textContent += `continue pruning!!\n`;
+
+                //ここにcontinueクリックしたときの処理
+
+            }
+
+            function onClickAttemptApply() {
+                const data = attempts.value;
+                dataConnection.send(data);
+                messages.textContent += `attempt ${data} more times!!\n`;
+
+                //ここに"Attempt"を"apply"したときの処理
+
+                attempts.value = '';
+            }
+
+            function onClickForwardApply() {
+                const data = forward.value;
+                dataConnection.send(data);
+                messages.textContent += `go ${data} m forward!!\n`;
+                //ここに"Forward"を"apply"したときの処理
+
+            }
+
             closeTrigger.addEventListener('click', () => mediaConnection.close(true));
         }
     });
-
-    // function estimateMediaLatency() {
-    //     // console.log("local stream is null");
-    //     if (localStream != null) {
-    //         //var videoTrackOr = localStream.getVideoTrack()[0];
-    //         //var videoTrackSettings = videoTrackOr.getSettings();
-    //         //console.log("null de ha aniyo");
-    //         if ("latency" in videoTrackSettings) {
-    //             // local.getTracks;
-    //             // document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
-    //             //console.log("latency is arimasu");
-    //         }
-    //     }
-    // }
-
-    // setInterval(estimateMediaLatency, 100);
 
     // Register callee handler
     function waitCall() {
@@ -228,6 +247,9 @@ const Peer = window.Peer;
                 dataConnection.once('open', async () => {
                     messages.textContent += `=== DataConnection has been opened ===\n`;
                     sendTrigger.addEventListener('click', onClickSend);
+                    continueTrigger.addEventListener('click', onClickContinue);
+                    attemptApply.addEventListener('click', onClickAttemptApply);
+                    forwardApply.addEventListener('click', onClickForwardApply);
                 });
 
                 dataConnection.on('data', data => {
@@ -237,6 +259,9 @@ const Peer = window.Peer;
                 dataConnection.once('close', () => {
                     messages.textContent += `=== DataConnection has been closed ===\n`;
                     sendTrigger.removeEventListener('click', onClickSend);
+                    continueTrigger.removeEventListener('click', onClickContinue);
+                    attemptApply.removeEventListener('click', onClickAttemptApply);
+                    forwardApply.removeEventListener('click', onClickForwardApply);
                 });
 
                 // Register closing handler
@@ -251,6 +276,32 @@ const Peer = window.Peer;
                     messages.textContent += `You: ${data}\n`;
                     localText.value = '';
                 }
+
+                function onClickContinue() {
+                    messages.textContent += `continue pruning!!\n`;
+
+                    //ここにcontinueクリックしたときの処理
+
+                }
+
+                function onClickAttemptApply() {
+                    const data = attempts.value;
+                    dataConnection.send(data);
+                    messages.textContent += `attempt ${data} more times!!\n`;
+
+                    //ここに"Attempt"を"apply"したときの処理
+
+                    attempts.value = '';
+                }
+
+                function onClickForwardApply() {
+                    const data = forward.value;
+                    dataConnection.send(data);
+                    messages.textContent += `go ${data} m forward!!\n`;
+                    //ここに"Forward"を"apply"したときの処理
+
+                }
+
             });
             peer.on('error', console.error);
         }
