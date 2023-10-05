@@ -312,21 +312,21 @@ const Peer = window.Peer;
 
                 dataConnection.on('data', data => {
                     messages.textContent += `${dataConnection.remoteId}: ${data}\n`;
-                    if (data.match("pan")) {
-                        var splitPan = data.split(",");
-                        document.getElementById('video-pan').value = splitPan[1];
-                        console.log("Pan was adjusted");
-                    }
-                    else if (data.match("tilt")) {
-                        var splitTilt = data.split(",");
-                        document.getElementById('video-tilt').value = splitTilt[1];
-                        console.log("Tilt was adjusted");
-                    }
-                    else if (data.match("zoom")) {
-                        var splitZoom = data.split(",");
-                        document.getElementById('video-zoom').value = splitZoom[1];
-                        console.log("Zoom was adjusted");
-                    }
+                    // if (data.match("pan")) {
+                    //     var splitPan = data.split(",");
+                    //     document.getElementById('video-pan').value = splitPan[1];
+                    //     console.log("Pan was adjusted");
+                    // }
+                    // else if (data.match("tilt")) {
+                    //     var splitTilt = data.split(",");
+                    //     document.getElementById('video-tilt').value = splitTilt[1];
+                    //     console.log("Tilt was adjusted");
+                    // }
+                    // else if (data.match("zoom")) {
+                    //     var splitZoom = data.split(",");
+                    //     document.getElementById('video-zoom').value = splitZoom[1];
+                    //     console.log("Zoom was adjusted");
+                    // }
                 });
 
                 dataConnection.once('close', () => {
