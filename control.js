@@ -1,8 +1,4 @@
-// const API_KEY = "94d5c621-415d-4003-a1be-822df987831f";
 const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
-//const userName = window.prompt("Please input user name", "")
-//const localVideoType = window.confirm("Is it okay to use the camera? \n If this answer is No, use schreen sharing");
-//sa
 const Peer = window.Peer;
 
 (async function main() {
@@ -18,11 +14,7 @@ const Peer = window.Peer;
     const remoteVideo = document.getElementById('js-remote-stream');
     const remoteId = document.getElementById('js-remote-id');
     const messages = document.getElementById('js-messages');
-    let videoDevicesElement = document.getElementById('video-device');
-    let cameraOptions = document.querySelector('.video-options>select');
-    let localVideoBox = document.getElementsByName('stream-type');
     let localVideoCodec = document.getElementById('js-video-codec').value;
-    let localVideoType = 'camera';
     const meta = document.getElementById('js-meta');
     const sdkSrc = document.querySelector('script[src*=skyway]');
     let peer = null
@@ -31,7 +23,6 @@ const Peer = window.Peer;
     let dataConnection = null;
     let videoTrack;
     var videoTrackSettings;
-    var capabilities;
 
     /*const peer = (window.peer = new Peer(userName, {
       key: API_KEY,
@@ -103,12 +94,6 @@ const Peer = window.Peer;
     let localStream = null;
 
     captureTrigger.addEventListener('click', () => {
-        for (i = 0; i < localVideoBox.length; ++i) {
-            if (localVideoBox[i].checked) {
-                localVideoType = localVideoBox[i].value;
-            }
-        }
-        if (localVideoType == 'camera') {
             navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
@@ -130,30 +115,7 @@ const Peer = window.Peer;
                 capabilities = videoTrack.getCapabilities();
                 videoTrack.contentHint = document.getElementById("js-video-content").value;
                 document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
-                //console.log(targetDevice);
             })
-        }
-        else if (localVideoType == 'screen') {
-            navigator.mediaDevices.getDisplayMedia({
-                audio: false,
-                video: {
-                    width: Number(document.getElementById('video-width').value),
-                    height: Number(document.getElementById('video-height').value),
-                    frameRate: Number(document.getElementById('video-rate').value)
-                }
-            }).then(function (mediaStream) {
-                localStream = mediaStream;
-                localVideo.srcObject = mediaStream;
-                localVideo.playsInline = true;
-                localVideo.play().catch(console.error);
-                videoTrack = localStream.getTracks()[0];
-                var videoTrackSettings = videoTrack.getSettings();
-                videoTrack.contentHint = document.getElementById("js-video-content").value;
-                document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
-            });
-        }
-
-        // detail,motion,text
     })
 
     deleteCapturteTrigger.addEventListener('click', () => {
