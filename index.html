@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>pruning assist system</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
     <script src="control.js"></script>
 </head>
 
@@ -11,24 +12,36 @@
     <div>
         <h1>Pruning assist system</h1>
     </div>
+    <div class="local-stream">
+        <video id="js-local-stream" width="480" height="320"></video><br>
+    </div>
     <div id="remote-camera">
         <video id="js-remote-camera" width="480" height="320"></video>
     </div>
-
-    <div id="local-id">
+    <div id="get-captute">
+        <button id="js-startcapture-trigger" onclick="cameraInit()">Get Capture</button><br>
+        <button id="js-deletecapture-trigger">Delete Capture Source</button><br>
+    </div>
+    <!-- <div id="local-id">
         <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
             <button id="js-makepeer-trigger">Make Peer</button>
         <p>Your ID: <span id="js-local-id"></span></p>
-    </div>
+    </div> -->
     <!-- <div>
         SelectDevice:<select id="cameraSelect" disabled> </select><br>
         <input type="button" value="get capture" onclick="cameraInit()">
     </div> -->
+    <div id="peer-to-peer">
+        <button id="js-call-trigger">Call</button>
+        <button id="js-close-trigger">Close</button><br>
+    </div>
     <div id="command">
         <p><button type="submit">Continue</button></p>
-        <p>Attempt:<input type="number" id="attempt" step="1" min="0" value="0"> <button type="submit">apply</button>
+        <p>Attempt:<input type="number" id="attempt" step="1" min="0" value="0"> <button
+                id="js-attempt-apply">apply</button>
         </p>
-        <p>Forward:<input type="number" id="forward" step="0.05" min="0" value="0">[m] <button type="submit">apply</button></p>
+        <p>Forward:<input type="number" id="forward" step="0.05" min="0" value="0">[m] <button
+                id="js-forward-apply">apply</button></p>
     </div>
 </body>
 
