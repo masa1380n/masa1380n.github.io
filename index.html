@@ -11,17 +11,24 @@
     <div>
         <h1>Pruning assist system</h1>
     </div>
-    <div id="camera_streaming">
-        <video id="video" width="480" height="320"></video>
+    <div id="remote-camera">
+        <video id="js-remote-camera" width="480" height="320"></video>
     </div>
-    <div>
-        <!--SelectDevice:<select id="cameraSelect" disabled> </select><br>-->
+
+    <div id="local-id">
+        <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
+            <button id="js-makepeer-trigger">Make Peer</button>
+        <p>Your ID: <span id="js-local-id"></span></p>
+    </div>
+    <!-- <div>
+        SelectDevice:<select id="cameraSelect" disabled> </select><br>
         <input type="button" value="get capture" onclick="cameraInit()">
-    </div>
+    </div> -->
     <div id="command">
-        <input type="button" value="continue"><br>
-        Times:<input type="number" id="times" value="0"><input type="button" value="apply"><br>
-        Forward:<input type="number" id="forward" value="0">[m]<input type="button" value="apply">
+        <p><button type="submit">Continue</button></p>
+        <p>Attempt:<input type="number" id="attempt" step="1" min="0" value="0"> <button type="submit">apply</button>
+        </p>
+        <p>Forward:<input type="number" id="forward" step="0.05" min="0" value="0">[m] <button type="submit">apply</button></p>
     </div>
 </body>
 
