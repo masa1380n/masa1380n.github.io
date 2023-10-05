@@ -14,9 +14,6 @@ const Peer = window.Peer;
     const remoteVideo = document.getElementById('js-remote-stream');
     const remoteId = document.getElementById('js-remote-id');
     const messages = document.getElementById('js-messages');
-    let localVideoCodec = document.getElementById('js-video-codec').value;
-    const meta = document.getElementById('js-meta');
-    const sdkSrc = document.querySelector('script[src*=skyway]');
     let peer = null
     let targetDevice = null;
     let mediaConnection = null;
@@ -101,9 +98,6 @@ const Peer = window.Peer;
                     height: Number(document.getElementById('video-height').value),
                     frameRate: Number(document.getElementById('video-rate').value),
                     deviceId: String(targetDevice),
-                    pan: false,
-                    tilt: false,
-                    zoom: false
                 }
             }).then(function (mediaStream) {
                 localStream = mediaStream;
@@ -113,7 +107,7 @@ const Peer = window.Peer;
                 videoTrack = localStream.getTracks()[1];//[0]is audio,[1]is video
                 videoTrackSettings = videoTrack.getSettings();
                 capabilities = videoTrack.getCapabilities();
-                videoTrack.contentHint = document.getElementById("js-video-content").value;
+                // videoTrack.contentHint = document.getElementById("js-video-content").value;
                 document.getElementById("js-estimated-latency").textContent = videoTrackSettings.latency;
             })
     })
