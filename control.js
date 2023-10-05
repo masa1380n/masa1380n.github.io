@@ -17,7 +17,7 @@ const CLIENT_ID = "remote-monitor-client";
     const captureTrigger = document.getElementById('js-startcapture-trigger');
     const deleteCapturteTrigger = document.getElementById('js-deletecapture-trigger');
 
-    let localVideoCodec = document.getElementById('js-video-codec').value;
+    // let localVideoCodec = document.getElementById('js-video-codec').value;
     let localVideoType = 'camera';
     let peer = null
     let targetDevice = null;
