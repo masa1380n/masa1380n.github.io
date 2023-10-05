@@ -101,9 +101,9 @@ const Peer = window.Peer;
                     height: Number(document.getElementById('video-height').value),
                     frameRate: Number(document.getElementById('video-rate').value),
                     deviceId: String(targetDevice),
-                    pan: true,
-                    tilt: true,
-                    zoom: true
+                    pan: false,
+                    tilt: false,
+                    zoom: false
                 }
             }).then(function (mediaStream) {
                 localStream = mediaStream;
