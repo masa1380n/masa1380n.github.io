@@ -83,8 +83,8 @@ const Peer = window.Peer;
     };
 
     let videoCallOptions = {
-        videoBandwidth: Number(document.getElementById('js-video-byte').value),
-        videoCodec: String(document.getElementById('js-video-codec').value),
+        // videoBandwidth: Number(document.getElementById('js-video-byte').value),
+        // videoCodec: String(document.getElementById('js-video-codec').value),
         audioCodec: "opus"
     };
 
@@ -94,9 +94,9 @@ const Peer = window.Peer;
             navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    width: Number(document.getElementById('video-width').value),
-                    height: Number(document.getElementById('video-height').value),
-                    frameRate: Number(document.getElementById('video-rate').value),
+                    // width: Number(document.getElementById('video-width').value),
+                    // height: Number(document.getElementById('video-height').value),
+                    // frameRate: Number(document.getElementById('video-rate').value),
                     deviceId: String(targetDevice),
                 }
             }).then(function (mediaStream) {
@@ -130,8 +130,8 @@ const Peer = window.Peer;
               return;
             }*/
 
-            videoCallOptions.videoBandwidth = Number(document.getElementById('js-video-byte').value);
-            videoCallOptions.videoCodec = String(document.getElementById('js-video-codec').value);
+            // videoCallOptions.videoBandwidth = Number(document.getElementById('js-video-byte').value);
+            // videoCallOptions.videoCodec = String(document.getElementById('js-video-codec').value);
             //console.log(videoCallOptions);
             mediaConnection = peer.call(remoteId.value, localStream, videoCallOptions);
 
@@ -199,11 +199,11 @@ const Peer = window.Peer;
             peer.on('call', mediaConnection => {
 
                 let videoAnswerOptions = {
-                    videoBandwidth: Number(document.getElementById('js-video-byte').value),
-                    videoCodec: String(document.getElementById('js-video-codec').value),
+                    // videoBandwidth: Number(document.getElementById('js-video-byte').value),
+                    // videoCodec: String(document.getElementById('js-video-codec').value),
                     audioCodec: "opus"
                 };
-                videoAnswerOptions.videoBandwidth = Number(document.getElementById('js-video-byte').value);
+                // videoAnswerOptions.videoBandwidth = Number(document.getElementById('js-video-byte').value);
                 //videoAnswerOptions.videoCodec = String(document.getElementById('js-video-codec').value);
                 //console.log(videoAnswerOptions);
 
