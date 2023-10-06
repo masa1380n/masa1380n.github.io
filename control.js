@@ -1,5 +1,42 @@
 const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
+let Allow_continue, Attempts, Forward_distance;
+
+
+const ROSLIB = require("roslib");
+const ros = new ROSLIB.Ros({
+    url: '192.168.6.145:9090'
+});
+
+ros.on('connection', () => {
+    console.log('Connected to websocket server');
+});
+
+ros.on('error', error => {
+    console.log('Error connecting to websocket server: ', error);
+});
+
+ros.on('close', () => {
+    console.log("Connection to websocket server was closed");
+});
+
+const pruningAssistServer = new ROSLIB.Service({
+    ros: ros,
+    name: '/PruningAssist',
+    serviceType: 'fanuc_manipulation/PruningAssist',
+});
+
+pruningAssistServer.advertise((req, res) => {
+    if(req.call)
+    {
+        //applyできるようにする
+    }
+    res.allow_continue = Allow_continue;
+    res.attempts = Attempts;
+    res.forward_distance = Forward_distance;
+    return;
+});
+
 
 (async function main() {
     let localVideo = document.getElementById('js-local-stream');
@@ -114,6 +151,12 @@ const Peer = window.Peer;
 
     let command = { continue: false, attempt: 0, forward: 0 };
 
+    //Time stamp
+    function getTime() {
+        var date = new Date();
+        return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
+    }
+
     // client
     callTrigger.addEventListener('click', () => {
 
@@ -174,12 +217,15 @@ const Peer = window.Peer;
                     dataConnection.send(json_data);
                     if (ifContinue.checked) {
                         text = `Continue pruning!`;
+                        ifContinue.checked = false;
                     }
                     else if (attempts.value > 0) {
                         text = `Attempt more ${attempts.value} time!`;
+                        attempts.value = 0;
                     }
                     else if (forward.value > 0) {
                         text = `go ${forward.value} m forward!`;
+                        forward.value = 0;
                     }
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
@@ -191,12 +237,6 @@ const Peer = window.Peer;
             closeTrigger.addEventListener('click', () => mediaConnection.close(true));
         }
     });
-
-    //Time stamp
-    function getTime() {
-        var date = new Date();
-        return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
-    }
 
     // Register callee handler
     function waitCall() {
@@ -239,19 +279,19 @@ const Peer = window.Peer;
                     let text = ``;
                     if (command.continue) {
                         text = `Continue pruning!`;
-
+                        Allow_continue = command.continue;
                         //continueされたときの処理
 
                     }
                     else if (command.attempt > 0) {
-                        text = `Attempt more ${command.attempts} time!`;
-
+                        text = `Attempt more ${command.attempt} time!`;
+                        Attempts = command.attempt;
                         //attemptされたときの処理
 
                     }
                     else if (command.forward > 0) {
                         text = `go ${command.forward} m forward!`;
-
+                        Forward_distance = command.forward;
                         //forwardされたときの処理
 
                     }
