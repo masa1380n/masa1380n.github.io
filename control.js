@@ -3,40 +3,40 @@ const Peer = window.Peer;
 let Allow_continue, Attempts, Forward_distance;
 let allowApply = false;
 
-// const ROSLIB = require("roslib");
-const ros = new ROSLIB.Ros({
-    url: 'ws://192.168.6.145:9090'
-});
+function roslib() {
+    const ros = new ROSLIB.Ros({
+        url: 'wss://192.168.6.145:9090'
+    });
 
-ros.on('connection', () => {
-    console.log('Connected to websocket server');
-});
+    ros.on('connection', () => {
+        console.log('Connected to websocket server');
+    });
 
-ros.on('error', error => {
-    console.log('Error connecting to websocket server: ', error);
-});
+    ros.on('error', error => {
+        console.log('Error connecting to websocket server: ', error);
+    });
 
-ros.on('close', () => {
-    console.log("Connection to websocket server was closed");
-});
+    ros.on('close', () => {
+        console.log("Connection to websocket server was closed");
+    });
 
-const pruningAssistServer = new ROSLIB.Service({
-    ros: ros,
-    name: '/PruningAssist',
-    serviceType: 'fanuc_manipulation/PruningAssist',
-});
+    const pruningAssistServer = new ROSLIB.Service({
+        ros: ros,
+        name: '/PruningAssist',
+        serviceType: 'fanuc_manipulation/PruningAssist',
+    });
 
-pruningAssistServer.advertise((req, res) => {
-    if (req.call) {
-        allowApply = true;
-        console.log("service call");
-    }
-    res.allow_continue = Allow_continue;
-    res.attempts = Attempts;
-    res.forward_distance = Forward_distance;
-    return true;
-});
-
+    pruningAssistServer.advertise((req, res) => {
+        if (req.call) {
+            allowApply = true;
+            console.log("service call");
+        }
+        res.allow_continue = Allow_continue;
+        res.attempts = Attempts;
+        res.forward_distance = Forward_distance;
+        return true;
+    });
+}
 
 (async function main() {
     let localVideo = document.getElementById('js-local-stream');
@@ -62,7 +62,7 @@ pruningAssistServer.advertise((req, res) => {
     let videoTrack;
 
     server.addEventListener('click', () => {
-
+        new roslib();
     })
 
     makePeerTrigger.addEventListener('click', () => {
