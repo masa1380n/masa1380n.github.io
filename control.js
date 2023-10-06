@@ -181,7 +181,8 @@ const Peer = window.Peer;
                     else if (forward.value > 0) {
                         text = `go ${forward.value} m forward!`;
                     }
-                    messages.textContent += `${text}\n`;
+                    time = getTime();
+                    messages.textContent += `${time}\t${text}\n`;
                 }
                 catch (e) {
                     console.error(e.name, e.message)
@@ -190,6 +191,12 @@ const Peer = window.Peer;
             closeTrigger.addEventListener('click', () => mediaConnection.close(true));
         }
     });
+
+    //Time stamp
+    function getTime() {
+        var date = new Date();
+        return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds();
+    }
 
     // Register callee handler
     function waitCall() {
@@ -230,13 +237,13 @@ const Peer = window.Peer;
                 dataConnection.on('data', data => {
                     let command = JSON.parse(data);
                     let text = ``;
-                    if (command.ifContinue) {
+                    if (command.continue) {
                         text = `Continue pruning!`;
 
                         //continueされたときの処理
 
                     }
-                    else if (command.attempts > 0) {
+                    else if (command.attempt > 0) {
                         text = `Attempt more ${command.attempts} time!`;
 
                         //attemptされたときの処理
@@ -248,7 +255,8 @@ const Peer = window.Peer;
                         //forwardされたときの処理
 
                     }
-                    messages.textContent += `${text}\n`;
+                    time = getTime();
+                    messages.textContent += `${time}\t${text}\n`;
                 });
 
                 dataConnection.once('close', () => {
