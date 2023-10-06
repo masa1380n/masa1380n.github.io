@@ -229,6 +229,7 @@ const Peer = window.Peer;
 
                 dataConnection.on('data', data => {
                     let command = JSON.parse(data);
+                    let text = ``;
                     if (command.ifContinue) {
                         text = `Continue pruning!`;
 
