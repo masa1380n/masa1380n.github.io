@@ -12,11 +12,10 @@ const Peer = window.Peer;
     const remoteVideo = document.getElementById('js-remote-stream');
     const remoteId = document.getElementById('js-remote-id');
     const messages = document.getElementById('js-messages');
-    const continueTrigger = document.getElementById('js-continue');
+    const ifContinue = document.getElementById('js-continue');
     const attempts = document.getElementById('js-attempts');
-    const attemptApply = document.getElementById('js-attempt-apply');
     const forward = document.getElementById('js-forward');
-    const forwardApply = document.getElementById('js-forward-apply');
+    const commandTrigger = document.getElementById('js-command-trigger');
     let peer = null
     let targetDevice = null;
     let mediaConnection = null;
@@ -113,6 +112,8 @@ const Peer = window.Peer;
         localVideo.srcObject = null;
     })
 
+    let command = { continue: false, attempt: 0, forward: 0 };
+
     // client
     callTrigger.addEventListener('click', () => {
 
@@ -142,10 +143,7 @@ const Peer = window.Peer;
 
             dataConnection.once('open', async () => {
                 messages.textContent += `=== DataConnection has been opened ===\n`;
-                // sendTrigger.addEventListener('click', onClickSend);
-                continueTrigger.addEventListener('click', onClickContinue);
-                attemptApply.addEventListener('click', onClickAttemptApply);
-                forwardApply.addEventListener('click', onClickForwardApply);
+                commandTrigger.addEventListener('click', onClickApply);
             });
 
             dataConnection.on('data', data => {
@@ -154,51 +152,41 @@ const Peer = window.Peer;
 
             dataConnection.once('close', () => {
                 messages.textContent += `=== DataConnection has been closed ===\n`;
-                // sendTrigger.removeEventListener('click', onClickSend);
-                continueTrigger.removeEventListener('click', onClickContinue);
-                attemptApply.removeEventListener('click', onClickAttemptApply);
-                forwardApply.removeEventListener('click', onClickForwardApply);
+                commandTrigger.removeEventListener('click', onClickApply);
             });
 
-            // function onClickSend() {
-            //     const data = localText.value;
-            //     dataConnection.send(data);
-
-            //     messages.textContent += `You: ${data}\n`;
-            //     localText.value = '';
-            // }
-
-            function onClickContinue() {
-                const data = `continue pruning!!\n`;
-                messages.textContent += `${data}`;
-                dataConnection.send(data);
-
-                //ここにcontinueクリックしたときの処理
-
+            function onClickApply() {
+                try {
+                    if (ifContinue.checked) {
+                        if (attempts.value > 0 || forward.value > 0) {
+                            throw new Error('命令が重複しています。');
+                        }
+                    }
+                    else {
+                        if (attempts.value > 0 && forward.value > 0) {
+                            throw new Error('命令が重複しています。');
+                        }
+                    }
+                    command.continue = ifContinue.checked;
+                    command.attempt = attempts.value;
+                    command.forward = forward.value;
+                    const json_data = JSON.stringify(command);
+                    dataConnection.send(json_data);
+                    if (ifContinue.checked) {
+                        text = `Continue pruning!`;
+                    }
+                    else if (attempts.value > 0) {
+                        text = `Attempt more ${attempts.value} time!`;
+                    }
+                    else if (forward.value > 0) {
+                        text = `go ${forward.value} m forward!`;
+                    }
+                    messages.textContent += `${text}\n`;
+                }
+                catch (e) {
+                    console.error(e.name, e.message)
+                }
             }
-
-            function onClickAttemptApply() {
-                const val = attempts.value;
-                const data = `attempt ${val} more times!!\n`;
-                messages.textContent += `${data}`;
-                dataConnection.send(data);
-
-                //ここに"Attempt"を"apply"したときの処理
-
-                attempts.value = '0';
-            }
-
-            function onClickForwardApply() {
-                const val = forward.value;
-                const data = `go ${val} m forward!!\n`;
-                dataConnection.send(data);
-                messages.textContent += `${data}`;
-
-                //ここに"Forward"を"apply"したときの処理
-
-                forward.value = '0';
-            }
-
             closeTrigger.addEventListener('click', () => mediaConnection.close(true));
         }
     });
@@ -237,63 +225,39 @@ const Peer = window.Peer;
             peer.on('connection', dataConnection => {
                 dataConnection.once('open', async () => {
                     messages.textContent += `=== DataConnection has been opened ===\n`;
-                    // sendTrigger.addEventListener('click', onClickSend);
-                    // continueTrigger.addEventListener('click', onClickContinue);
-                    // attemptApply.addEventListener('click', onClickAttemptApply);
-                    // forwardApply.addEventListener('click', onClickForwardApply);
                 });
 
                 dataConnection.on('data', data => {
-                    messages.textContent += `${data}\n`;
+                    let command = JSON.parse(data);
+                    if (command.ifContinue) {
+                        text = `Continue pruning!`;
+
+                        //continueされたときの処理
+
+                    }
+                    else if (command.attempts > 0) {
+                        text = `Attempt more ${command.attempts} time!`;
+
+                        //attemptされたときの処理
+
+                    }
+                    else if (command.forward > 0) {
+                        text = `go ${command.forward} m forward!`;
+
+                        //forwardされたときの処理
+
+                    }
+                    messages.textContent += `${text}\n`;
                 });
 
                 dataConnection.once('close', () => {
                     messages.textContent += `=== DataConnection has been closed ===\n`;
-                    // sendTrigger.removeEventListener('click', onClickSend);
-                    // continueTrigger.removeEventListener('click', onClickContinue);
-                    // attemptApply.removeEventListener('click', onClickAttemptApply);
-                    // forwardApply.removeEventListener('click', onClickForwardApply);
                 });
 
                 // Register closing handler
                 closeTrigger.addEventListener('click', () => dataConnection.close(true), {
                     once: true,
                 });
-
-                // function onClickSend() {
-                //     const data = localText.value;
-                //     dataConnection.send(data);
-
-                //     messages.textContent += `You: ${data}\n`;
-                //     localText.value = '';
-                // }
-
-                // function onClickContinue() {
-                //     messages.textContent += `continue pruning!!\n`;
-
-                //     //ここにcontinueクリックしたときの処理
-
-                // }
-
-                // function onClickAttemptApply() {
-                //     const data = attempts.value;
-                //     dataConnection.send(data);
-                //     messages.textContent += `attempt ${data} more times!!\n`;
-
-                //     //ここに"Attempt"を"apply"したときの処理
-
-                //     attempts.value = '0';
-                // }
-
-                // function onClickForwardApply() {
-                //     const data = forward.value;
-                //     dataConnection.send(data);
-                //     messages.textContent += `go ${data} m forward!!\n`;
-                //     //ここに"Forward"を"apply"したときの処理
-
-                //     forward.value = '0';
-                // }
-
             });
             peer.on('error', console.error);
         }
