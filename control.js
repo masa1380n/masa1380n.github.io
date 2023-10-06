@@ -3,7 +3,7 @@ const Peer = window.Peer;
 let Allow_continue, Attempts, Forward_distance;
 let allowApply = false;
 
-function roslib() {
+// function roslib() {
     const ros = new ROSLIB.Ros({
         url: 'wss://192.168.6.145:9090'
     });
@@ -36,7 +36,7 @@ function roslib() {
         res.forward_distance = Forward_distance;
         return true;
     });
-}
+// }
 
 (async function main() {
     let localVideo = document.getElementById('js-local-stream');
@@ -62,7 +62,7 @@ function roslib() {
     let videoTrack;
 
     server.addEventListener('click', () => {
-        new roslib();
+        // new roslib();
     })
 
     makePeerTrigger.addEventListener('click', () => {
