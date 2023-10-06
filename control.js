@@ -1,11 +1,12 @@
 const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
 let Allow_continue, Attempts, Forward_distance;
+let allowApply = false;
 
 
-const ROSLIB = require("roslib");
+// const ROSLIB = require("roslib");
 const ros = new ROSLIB.Ros({
-    url: '192.168.6.145:9090'
+    url: 'ws://192.168.6.145:9090'
 });
 
 ros.on('connection', () => {
@@ -27,14 +28,14 @@ const pruningAssistServer = new ROSLIB.Service({
 });
 
 pruningAssistServer.advertise((req, res) => {
-    if(req.call)
-    {
-        //applyできるようにする
+    if (req.call) {
+        allowApply = true;
+        console.log("service call");
     }
     res.allow_continue = Allow_continue;
     res.attempts = Attempts;
     res.forward_distance = Forward_distance;
-    return;
+    return true;
 });
 
 
@@ -200,6 +201,9 @@ pruningAssistServer.advertise((req, res) => {
 
             function onClickApply() {
                 try {
+                    if(!allowApply){
+                        throw new Error('命令が許可されていません。');
+                    }
                     if (ifContinue.checked) {
                         if (attempts.value > 0 || forward.value > 0) {
                             throw new Error('命令が重複しています。');
@@ -229,6 +233,7 @@ pruningAssistServer.advertise((req, res) => {
                     }
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
+                    allowApply = false;
                 }
                 catch (e) {
                     console.error(e.name, e.message)
