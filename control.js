@@ -3,7 +3,6 @@ const Peer = window.Peer;
 let Allow_continue, Attempts, Forward_distance;
 let allowApply = false;
 
-
 // const ROSLIB = require("roslib");
 const ros = new ROSLIB.Ros({
     url: 'ws://192.168.6.145:9090'
@@ -41,6 +40,8 @@ pruningAssistServer.advertise((req, res) => {
 
 (async function main() {
     let localVideo = document.getElementById('js-local-stream');
+    const server = document.getElementById('js-server');
+    const client = document.getElementById('js-client');
     const localId = document.getElementById('js-local-id');
     const makePeerTrigger = document.getElementById('js-makepeer-trigger');
     const captureTrigger = document.getElementById('js-startcapture-trigger');
@@ -59,6 +60,10 @@ pruningAssistServer.advertise((req, res) => {
     let mediaConnection = null;
     let dataConnection = null;
     let videoTrack;
+
+    server.addEventListener('click', () => {
+
+    })
 
     makePeerTrigger.addEventListener('click', () => {
         var userName = document.getElementById('js-your-id').value;
@@ -201,7 +206,7 @@ pruningAssistServer.advertise((req, res) => {
 
             function onClickApply() {
                 try {
-                    if(!allowApply){
+                    if (!allowApply) {
                         throw new Error('命令が許可されていません。');
                     }
                     if (ifContinue.checked) {
@@ -243,7 +248,7 @@ pruningAssistServer.advertise((req, res) => {
         }
     });
 
-    // Register callee handler
+    // server
     function waitCall() {
         if (peer != null) {
             peer.on('call', mediaConnection => {
@@ -286,19 +291,16 @@ pruningAssistServer.advertise((req, res) => {
                         text = `Continue pruning!`;
                         Allow_continue = command.continue;
                         //continueされたときの処理
-
                     }
                     else if (command.attempt > 0) {
                         text = `Attempt more ${command.attempt} time!`;
                         Attempts = command.attempt;
                         //attemptされたときの処理
-
                     }
                     else if (command.forward > 0) {
                         text = `go ${command.forward} m forward!`;
                         Forward_distance = command.forward;
                         //forwardされたときの処理
-
                     }
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
