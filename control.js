@@ -33,8 +33,8 @@ function roslib() {
             allowApply = true;
             console.log("service call");
         }
-        res.allow_continue = true;
-        res.attempts = attempts;
+        res.allow_continue = allowContinue;
+        res.attempts = attempt;
         res.forward_distance = forwardDistance;
         return true;
     });
@@ -53,7 +53,7 @@ function roslib() {
     const callTrigger = document.getElementById('js-call-trigger');
     const closeTrigger = document.getElementById('js-close-trigger');
     const ifContinue = document.getElementById('js-continue');
-    const attempts = document.getElementById('js-attempts');
+    const attemptExpected = document.getElementById('js-attempts');
     const forward = document.getElementById('js-forward');
     const commandTrigger = document.getElementById('js-command-trigger');
     const messages = document.getElementById('js-messages');
@@ -227,17 +227,17 @@ function roslib() {
                         throw new Error('命令が許可されていません。');
                     }
                     if (ifContinue.checked) {
-                        if (attempts.value > 0 || forward.value > 0) {
+                        if (attemptExpected.value > 0 || forward.value > 0) {
                             throw new Error('命令が重複しています。');
                         }
                     }
                     else {
-                        if (attempts.value > 0 && forward.value > 0) {
+                        if (attemptExpected.value > 0 && forward.value > 0) {
                             throw new Error('命令が重複しています。');
                         }
                     }
                     command.continue = ifContinue.checked;
-                    command.attempt = attempts.value;
+                    command.attempt = attemptExpected.value;
                     command.forward = forward.value;
                     const json_data = JSON.stringify(command);
                     dataConnection.send(json_data);
@@ -245,9 +245,9 @@ function roslib() {
                         text = `Continue pruning!`;
                         ifContinue.checked = false;
                     }
-                    else if (attempts.value > 0) {
-                        text = `Attempt more ${attempts.value} time!`;
-                        attempts.value = 0;
+                    else if (attemptExpected.value > 0) {
+                        text = `Attempt more ${attemptExpected.value} time!`;
+                        attemptExpected.value = 0;
                     }
                     else if (forward.value > 0) {
                         text = `go ${forward.value} m forward!`;
@@ -311,7 +311,7 @@ function roslib() {
                     }
                     else if (command.attempt > 0) {
                         text = `Attempt more ${command.attempt} time!`;
-                        Attempts = command.attempt;
+                        attempts = command.attempt;
                         //attemptされたときの処理
                     }
                     else if (command.forward > 0) {
