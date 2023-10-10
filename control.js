@@ -324,7 +324,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     let text = ``;
                     if (command.continue) {
                         text = `Continue pruning!`;
-                        Allow_continue = command.continue;
+                        allowContinue = command.continue;
                         //continueされたときの処理
                     }
                     else if (command.attempt > 0) {
@@ -334,7 +334,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     }
                     else if (command.forward > 0) {
                         text = `go ${command.forward} m forward!`;
-                        Forward_distance = command.forward;
+                        forwardDistance = command.forward;
                         //forwardされたときの処理
                     }
                     time = getTime();
