@@ -4,41 +4,8 @@ const SERVER_ID = "Server";
 const CLIENT_ID = "Client";
 let allowContinue, attempts, forwardDistance;
 let allowApply = false;
-
-function roslib() {
-    const ros = new ROSLIB.Ros({
-        url: 'ws://192.168.6.112:9090'
-    });
-
-    ros.on('connection', () => {
-        console.log('Connected to websocket server');
-    });
-
-    ros.on('error', error => {
-        console.log('Error connecting to websocket server: ', error);
-    });
-
-    ros.on('close', () => {
-        console.log("Connection to websocket server was closed");
-    });
-
-    const pruningAssistServer = new ROSLIB.Service({
-        ros: ros,
-        name: '/PruningAssist',
-        serviceType: 'fanuc_manipulation/PruningAssist',
-    });
-
-    pruningAssistServer.advertise((req, res) => {
-        if (req.call) {
-            allowApply = true;
-            console.log("service call");
-        }
-        res.allow_continue = allowContinue;
-        res.attempts = attempts;
-        res.forward_distance = forwardDistance;
-        return true;
-    });
-}
+let sendCommand = false;
+const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async function main() {
     const serverTrigger = document.getElementById('js-server');
@@ -62,6 +29,46 @@ function roslib() {
     let mediaConnection = null;
     let dataConnection = null;
     let videoTrack;
+
+    function roslib() {
+        const ros = new ROSLIB.Ros({
+            url: 'ws://192.168.6.112:9090'
+        });
+
+        ros.on('connection', () => {
+            console.log('Connected to websocket server');
+        });
+
+        ros.on('error', error => {
+            console.log('Error connecting to websocket server: ', error);
+        });
+
+        ros.on('close', () => {
+            console.log("Connection to websocket server was closed");
+        });
+
+        const pruningAssistServer = new ROSLIB.Service({
+            ros: ros,
+            name: '/PruningAssist',
+            serviceType: 'fanuc_manipulation/PruningAssist',
+        });
+
+        pruningAssistServer.advertise(async(req, res) => {
+            console.log("service call");
+            if (req.call) {
+                allowApply = true;
+            }
+            while (!sendCommand) {
+                await _sleep(100);
+                console.log("waiting for command..")
+            }
+            res.allow_continue = allowContinue;
+            res.attempts = attempts;
+            res.forward_distance = forwardDistance;
+            sendCommand = false;
+            return true;
+        });
+    }
 
     let switchComponent = (el) => {
         if (el.style.display == '') {
@@ -172,7 +179,7 @@ function roslib() {
         localVideo.srcObject = null;
     })
 
-    let command = { continue: false, attempt: 0, forward: 0 };
+    let command = { continue: false, attempt: 0, forward: 0, allow_command: allowApply };
 
     //Time stamp
     function getTime() {
@@ -193,7 +200,6 @@ function roslib() {
             mediaConnection = peer.call(SERVER_ID, localStream, videoCallOptions);
 
             mediaConnection.on('stream', async (stream) => {
-                console.log('MORATTAYO')
                 // Render remote stream for client
                 remoteVideo.srcObject = stream;
                 remoteVideo.playsInline = true;
@@ -213,7 +219,10 @@ function roslib() {
             });
 
             dataConnection.on('data', data => {
-                // messages.textContent += `${data}\n`;
+                let command = JSON.parse(data);
+                // if(command.allow_command){
+
+                // }
             });
 
             dataConnection.once('close', () => {
@@ -223,7 +232,7 @@ function roslib() {
 
             function onClickApply() {
                 try {
-                    if (!allowApply) {
+                    if (!command.allow_command) {
                         throw new Error('命令が許可されていません。');
                     }
                     if (ifContinue.checked) {
@@ -299,6 +308,13 @@ function roslib() {
             peer.on('connection', dataConnection => {
                 dataConnection.once('open', async () => {
                     messages.textContent += `=== DataConnection has been opened ===\n`;
+                    while(!allowApply){
+                        await _sleep(100);
+                        console.log("waiting for allow..");
+                    }
+                    command.allow_command = true;
+                    const json_data = JSON.stringify(command);
+                    dataConnection.send(json_data);
                 });
 
                 dataConnection.on('data', data => {
