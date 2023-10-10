@@ -34,7 +34,7 @@ function roslib() {
             console.log("service call");
         }
         res.allow_continue = allowContinue;
-        res.attempts = attempt;
+        res.attempts = attempts;
         res.forward_distance = forwardDistance;
         return true;
     });
