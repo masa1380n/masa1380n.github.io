@@ -2,9 +2,7 @@ const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
 const SERVER_ID = "Server";
 const CLIENT_ID = "Client";
-let allowContinue = false;
-let attempts = 0;
-let forwardDistance = 0;
+let allowContinue, attempts, forwardDistance;
 let request = false;
 let response = false;
 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -224,7 +222,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             dataConnection.on('data', data => {
                 command = JSON.parse(data);
-                if (command.request) {
+                if(command.request){
                     time = getTime();
                     messages.textContent += `${time}\tPlease response command!!\n`;
                 }
@@ -326,19 +324,16 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     let text = ``;
                     if (command.continue) {
                         text = `Continue pruning!`;
-                        allowContinue = command.continue;
-                        //continueされたときの処理
                     }
                     else if (command.attempt > 0) {
                         text = `Attempt more ${command.attempt} time!`;
-                        attempts = command.attempt;
-                        //attemptされたときの処理
                     }
                     else if (command.forward > 0) {
                         text = `go ${command.forward} m forward!`;
-                        forwardDistance = command.forward;
-                        //forwardされたときの処理
                     }
+                    allowContinue = command.continue;
+                    attempts = command.attempt;
+                    forwardDistance = command.forward;
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
                     response = true;
