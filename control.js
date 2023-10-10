@@ -35,7 +35,7 @@ function roslib() {
         console.log("service call");
         while(true)
         {
-            if(!response){
+            if(response){
                 break;
             }
         }
