@@ -2,7 +2,7 @@ const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
 const SERVER_ID = "Server";
 const CLIENT_ID = "Client";
-let Allow_continue, Attempts, Forward_distance;
+let allowContinue, attempts, forwardDistance;
 let allowApply = false;
 
 function roslib() {
@@ -33,9 +33,9 @@ function roslib() {
             allowApply = true;
             console.log("service call");
         }
-        res.allow_continue = Allow_continue;
-        res.attempts = Attempts;
-        res.forward_distance = Forward_distance;
+        res.allow_continue = allowContinue;
+        res.attempts = attempts;
+        res.forward_distance = forwardDistance;
         return true;
     });
 }
