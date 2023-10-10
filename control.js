@@ -214,7 +214,8 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             dataConnection = peer.connect(SERVER_ID);
 
             dataConnection.once('open', async () => {
-                messages.textContent += `=== DataConnection has been opened ===\n`;
+                time = getTime();
+                messages.textContent += `${time}\tDataConnection has been opened.\n`;
                 commandTrigger.addEventListener('click', onClickApply);
             });
 
@@ -222,14 +223,15 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             dataConnection.on('data', data => {
                 command = JSON.parse(data);
-                if(command.request){
+                if (command.request) {
                     time = getTime();
                     messages.textContent += `${time}\tPlease response command!!\n`;
                 }
             });
 
             dataConnection.once('close', () => {
-                messages.textContent += `=== DataConnection has been closed ===\n`;
+                time = getTime();
+                messages.textContent += `${time}\tDataConnection has been closed.\n`;
                 commandTrigger.removeEventListener('click', onClickApply);
             });
 
@@ -309,7 +311,8 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             peer.on('connection', dataConnection => {
                 dataConnection.once('open', async () => {
-                    messages.textContent += `=== DataConnection has been opened ===\n`;
+                    time = getTime();
+                    messages.textContent += `${time}\tDataConnection has been opened.\n`;
                     while (!request) {
                         await _sleep(100);
                         console.log("waiting for allow..");
@@ -341,7 +344,8 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 });
 
                 dataConnection.once('close', () => {
-                    messages.textContent += `=== DataConnection has been closed ===\n`;
+                    time = getTime();
+                    messages.textContent += `${time}\tDataConnection has been closed.\n`;
                 });
 
                 // Register closing handler
