@@ -55,17 +55,15 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
         pruningAssistServer.advertise(async (req, res) => {
             console.log("service call");
-            if (req.call) {
-                request = true;
-                while (!response) {
-                    await _sleep(100);
-                    console.log("waiting for command..")
-                }
-                res.allow_continue = allowContinue;
-                res.attempts = attempts;
-                res.forward_distance = forwardDistance;
-                response = false;
+            request = true;
+            while (!response) {
+                await _sleep(100);
+                console.log("waiting for command..")
             }
+            res.allow_continue = true;
+            res.attempts = attempts;
+            res.forward_distance = forwardDistance;
+            response = false;
             return res;
         });
     }
