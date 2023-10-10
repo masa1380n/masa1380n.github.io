@@ -30,15 +30,22 @@ function roslib() {
         serviceType: 'fanuc_manipulation/PruningAssist',
     });
 
-    pruningAssistServer.advertise(async (req, res) => {
+    pruningAssistServer.advertise((req, res) => {
+        console.log(req.call)
         console.log("service call");
-        // request = true;
-        // res.allow_continue = true;
-        // res.attempts = 1;
-        // res.forward_distance = 0.2;
+        while(ture)
+        {
+            if(!response){
+                break;
+            }
+        }
         // while (!response) {
         //     await _sleep(100);
         //     console.log("waiting for command..")
+        // }
+        // if(req.call)
+        // {
+        //     console.log('true')
         // }
         res.allow_continue = true;
         res.attempts = 1;
@@ -46,8 +53,7 @@ function roslib() {
         response = false;
         return true;
     });
-}
-
+} 
 
 (async function main() {
     const serverTrigger = document.getElementById('js-server');
