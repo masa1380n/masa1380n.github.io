@@ -57,15 +57,15 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             console.log("service call");
             if (req.call) {
                 request = true;
+                while (!response) {
+                    await _sleep(100);
+                    console.log("waiting for command..")
+                }
+                res.allow_continue = allowContinue;
+                res.attempts = attempts;
+                res.forward_distance = forwardDistance;
+                response = false;
             }
-            while (!response) {
-                await _sleep(100);
-                console.log("waiting for command..")
-            }
-            res.allow_continue = allowContinue;
-            res.attempts = attempts;
-            res.forward_distance = forwardDistance;
-            response = false;
             return true;
         });
     }
@@ -218,13 +218,10 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 commandTrigger.addEventListener('click', onClickApply);
             });
 
-            let allow_command = false;
+            let command;
 
             dataConnection.on('data', data => {
-                let command = JSON.parse(data);
-                if(command.request){
-                    allow_command = true;
-                }
+                command = JSON.parse(data);
             });
 
             dataConnection.once('close', () => {
@@ -234,7 +231,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             function onClickApply() {
                 try {
-                    if (!allow_commands) {
+                    if (!command.request) {
                         throw new Error('命令が許可されていません。');
                     }
                     if (ifContinue.checked) {
