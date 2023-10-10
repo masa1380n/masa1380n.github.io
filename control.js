@@ -7,6 +7,48 @@ let request = false;
 let response = false;
 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+function roslib() {
+    const ros = new ROSLIB.Ros({
+        url: 'ws://192.168.6.112:9090'
+    });
+
+    ros.on('connection', () => {
+        console.log('Connected to websocket server');
+    });
+
+    ros.on('error', error => {
+        console.log('Error connecting to websocket server: ', error);
+    });
+
+    ros.on('close', () => {
+        console.log("Connection to websocket server was closed");
+    });
+
+    const pruningAssistServer = new ROSLIB.Service({
+        ros: ros,
+        name: '/PruningAssist',
+        serviceType: 'fanuc_manipulation/PruningAssist',
+    });
+
+    pruningAssistServer.advertise(async (req, res) => {
+        console.log("service call");
+        // request = true;
+        // res.allow_continue = true;
+        // res.attempts = 1;
+        // res.forward_distance = 0.2;
+        // while (!response) {
+        //     await _sleep(100);
+        //     console.log("waiting for command..")
+        // }
+        res.allow_continue = true;
+        res.attempts = 1;
+        res.forward_distance = 0.2;
+        response = false;
+        return true;
+    });
+}
+
+
 (async function main() {
     const serverTrigger = document.getElementById('js-server');
     const clientTrigger = document.getElementById('js-client');
@@ -30,46 +72,6 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     let dataConnection = null;
     let videoTrack;
 
-    function roslib() {
-        const ros = new ROSLIB.Ros({
-            url: 'ws://192.168.6.112:9090'
-        });
-
-        ros.on('connection', () => {
-            console.log('Connected to websocket server');
-        });
-
-        ros.on('error', error => {
-            console.log('Error connecting to websocket server: ', error);
-        });
-
-        ros.on('close', () => {
-            console.log("Connection to websocket server was closed");
-        });
-
-        const pruningAssistServer = new ROSLIB.Service({
-            ros: ros,
-            name: '/PruningAssist',
-            serviceType: 'fanuc_manipulation/PruningAssist',
-        });
-
-        pruningAssistServer.advertise(async (req, res) => {
-            console.log("service call");
-            // request = true;
-            // res.allow_continue = true;
-            // res.attempts = 1;
-            // res.forward_distance = 0.2;
-            // while (!response) {
-            //     await _sleep(100);
-            //     console.log("waiting for command..")
-            // }
-            res.allow_continue = true;
-            res.attempts = 1;
-            res.forward_distance = 0.2;
-            response = false;
-            return true;
-        });
-    }
 
     let switchComponent = (el) => {
         if (el.style.display == '') {
