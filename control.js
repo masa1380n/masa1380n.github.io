@@ -1,11 +1,13 @@
 const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
+const SERVER_ID = "RemoteMonitorServer";
+const CLIENT_ID = "RemoteMonitorClient";
 let Allow_continue, Attempts, Forward_distance;
 let allowApply = false;
 
-// function roslib() {
+function roslib() {
     const ros = new ROSLIB.Ros({
-        url: 'wss://192.168.6.145:9090'
+        url: 'ws://192.168.6.145:9090'
     });
 
     ros.on('connection', () => {
@@ -36,12 +38,14 @@ let allowApply = false;
         res.forward_distance = Forward_distance;
         return true;
     });
-// }
+}
 
 (async function main() {
-    let localVideo = document.getElementById('js-local-stream');
     const server = document.getElementById('js-server');
     const client = document.getElementById('js-client');
+    const serverComp = document.getElementById('js-server-component');
+    const clientComp = document.getElementById('js-client-component');
+    let localVideo = document.getElementById('js-local-stream');
     const localId = document.getElementById('js-local-id');
     const makePeerTrigger = document.getElementById('js-makepeer-trigger');
     const captureTrigger = document.getElementById('js-startcapture-trigger');
@@ -49,7 +53,6 @@ let allowApply = false;
     const callTrigger = document.getElementById('js-call-trigger');
     const closeTrigger = document.getElementById('js-close-trigger');
     const remoteVideo = document.getElementById('js-remote-stream');
-    const remoteId = document.getElementById('js-remote-id');
     const messages = document.getElementById('js-messages');
     const ifContinue = document.getElementById('js-continue');
     const attempts = document.getElementById('js-attempts');
@@ -61,21 +64,36 @@ let allowApply = false;
     let dataConnection = null;
     let videoTrack;
 
+    let switchComponent = (el)=> {
+
+        if(el.style.display==''){
+          el.style.display='none';
+        }else{
+          el.style.display='';
+        }
+      
+      }
+
     server.addEventListener('click', () => {
         // new roslib();
-    })
+        switchComponent(serverComp);
+    });
+
+    client.addEventListener('click', () => {
+        switchComponent(clientComp);
+    });
 
     makePeerTrigger.addEventListener('click', () => {
-        var userName = document.getElementById('js-your-id').value;
-        console.log(userName);
-        peer = (window.peer = new Peer(userName,
+        // var userName = document.getElementById('js-your-id').value;
+        // console.log(userName);
+        peer = (window.peer = new Peer(SERVER_ID,
             {
                 key: API_KEY,
                 debug: 3
             }
         ))
         //document.getElementById('js-local-id') = String(peer);
-        peer.on('open', id => (localId.textContent = id));
+        peer.on('open', id => SERVER_ID);
         waitCall();
     });
 
@@ -173,7 +191,7 @@ let allowApply = false;
             // Note that you need to ensure the peer has connected to signaling server
             // before using methods of peer instance.
 
-            mediaConnection = peer.call(remoteId.value, localStream, videoCallOptions);
+            mediaConnection = peer.call(SERVER_ID, localStream, videoCallOptions);
 
             mediaConnection.on('stream', async (stream) => {
                 console.log('MORATTAYO')
@@ -188,7 +206,7 @@ let allowApply = false;
                 remoteVideo.srcObject = null;
             });
 
-            dataConnection = peer.connect(remoteId.value);
+            dataConnection = peer.connect(SERVER_ID);
 
             dataConnection.once('open', async () => {
                 messages.textContent += `=== DataConnection has been opened ===\n`;

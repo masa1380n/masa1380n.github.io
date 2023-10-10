@@ -19,29 +19,32 @@
     <h1>Remote pruning assist system</h1>
   </div>
   <div class="p2p-media">
-    <div class="remote-stream">
-      <video id="js-remote-stream" width="480" height="320"></video>
-    </div>
-    <div class="local-stream">
-      <video id="js-local-stream" width="480" height="320"></video><br>
+    <div class="switch-server-client">
       <button id="js-server">Server</button>
       <button id="js-client">Client</button>
-      <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
+    </div>
+    <!-- client -->
+    <div id="js-client-component" style="display:none;">
+      <video id="js-remote-stream" width="480" height="320"></video><br>
+      <button id="js-call-trigger">Call</button>
+      <button id="js-close-trigger">Close</button><br>
+      <p>Continue:<input type="checkbox" id="js-continue">
+        Attempt:<input type="number" id="js-attempts" step="1" min="0" value="0" style="width:50px">
+        Forward:<input type="number" id="js-forward" step="0.05" min="0" value="0" style="width:100px">[m]
+      <button id="js-command-trigger">Apply</button></p>
+    </div>
+    <!-- server -->
+    <div id="js-server-component" style="display:none;">
+      <video id="js-local-stream" width="480" height="320"></video><br>
+       <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
         <button id="js-makepeer-trigger">Make Peer</button>
       <p>Your ID: <span id="js-local-id"></span></p>
       SelectDevice:<select id="cameraSelect" disabled> </select><br>
       <button id="js-startcapture-trigger">Get Capture</button>
       <button id="js-deletecapture-trigger">Delete Capture Source</button><br>
-      <input type="text" placeholder="Remote Peer ID" id="js-remote-id">
-      <button id="js-call-trigger">Call</button>
-      <button id="js-close-trigger">Close</button><br>
     </div>
     <div class="p2p-data">
       <pre class="messages" id="js-messages"></pre>
-      <p>Continue:<input type="checkbox" id="js-continue">
-        Attempt:<input type="number" id="js-attempts" step="1" min="0" value="0">
-        Forward:<input type="number" id="js-forward" step="0.05" min="0" value="0">[m]</p>
-      <button id="js-command-trigger">Apply</button>
     </div>
   </div>
 </body>
