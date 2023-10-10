@@ -1,7 +1,7 @@
 const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
 const SERVER_ID = "Server";
-const CLIENT_ID = "RemoteMonitorClient";
+const CLIENT_ID = "Client";
 let Allow_continue, Attempts, Forward_distance;
 let allowApply = false;
 
@@ -46,7 +46,7 @@ function roslib() {
     const serverComp = document.getElementById('js-server-component');
     const clientComp = document.getElementById('js-client-component');
     let localVideo = document.getElementById('js-local-stream');
-    const localId = document.getElementById('js-local-id');
+    const mode = document.getElementById('js-mode');
     const makePeerTrigger = document.getElementById('js-makepeer-trigger');
     const captureTrigger = document.getElementById('js-startcapture-trigger');
     const deleteCapturteTrigger = document.getElementById('js-deletecapture-trigger');
@@ -65,35 +65,35 @@ function roslib() {
     let videoTrack;
 
     let switchComponent = (el) => {
-
         if (el.style.display == '') {
             el.style.display = 'none';
         } else {
             el.style.display = '';
         }
-
     }
 
     server.addEventListener('click', () => {
         // new roslib();
         switchComponent(serverComp);
-    });
-
-    client.addEventListener('click', () => {
-        switchComponent(clientComp);
-    });
-
-    makePeerTrigger.addEventListener('click', () => {
-        var userName = document.getElementById('js-your-id').value;
-        console.log(userName);
-        peer = (window.peer = new Peer(userName,
+        peer = (window.peer = new Peer(SERVER_ID,
             {
                 key: API_KEY,
                 debug: 3
             }
         ))
-        //document.getElementById('js-local-id') = String(peer);
-        peer.on('open', id => (localId.textContent = id));
+        peer.on('open', id => (mode.textContent = id));
+        waitCall();
+    });
+
+    client.addEventListener('click', () => {
+        switchComponent(clientComp);
+        peer = (window.peer = new Peer(CLIENT_ID,
+            {
+                key: API_KEY,
+                debug: 3
+            }
+        ))
+        peer.on('open', id => (mode.textContent = id));
         waitCall();
     });
 
