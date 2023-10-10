@@ -61,8 +61,8 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 console.log("waiting for command..")
             }
             res.allow_continue = true;
-            res.attempts = attempts;
-            res.forward_distance = forwardDistance;
+            res.attempts = 1;
+            res.forward_distance = 0.2;
             response = false;
             return res;
         });
