@@ -64,7 +64,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             res.attempts = 1;
             res.forward_distance = 0.2;
             response = false;
-            return res;
+            return true;
         });
     }
 
