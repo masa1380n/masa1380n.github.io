@@ -58,7 +58,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             if (req.call) {
                 request = true;
             }
-            while (!sendCommand) {
+            while (!response) {
                 await _sleep(100);
                 console.log("waiting for command..")
             }
