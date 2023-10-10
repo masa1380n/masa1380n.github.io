@@ -3,8 +3,8 @@ const Peer = window.Peer;
 const SERVER_ID = "Server";
 const CLIENT_ID = "Client";
 let allowContinue, attempts, forwardDistance;
-let allowApply = false;
-let sendCommand = false;
+let request = false;
+let response = false;
 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async function main() {
@@ -53,10 +53,10 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             serviceType: 'fanuc_manipulation/PruningAssist',
         });
 
-        pruningAssistServer.advertise(async(req, res) => {
+        pruningAssistServer.advertise(async (req, res) => {
             console.log("service call");
             if (req.call) {
-                allowApply = true;
+                request = true;
             }
             while (!sendCommand) {
                 await _sleep(100);
@@ -179,7 +179,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         localVideo.srcObject = null;
     })
 
-    let command = { continue: false, attempt: 0, forward: 0, allow_command: allowApply };
+    let command = { continue: false, attempt: 0, forward: 0, request: false };
 
     //Time stamp
     function getTime() {
@@ -218,11 +218,13 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                 commandTrigger.addEventListener('click', onClickApply);
             });
 
+            let allow_command = false;
+
             dataConnection.on('data', data => {
                 let command = JSON.parse(data);
-                // if(command.allow_command){
-
-                // }
+                if(command.request){
+                    allow_command = true;
+                }
             });
 
             dataConnection.once('close', () => {
@@ -232,7 +234,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             function onClickApply() {
                 try {
-                    if (!command.allow_command) {
+                    if (!allow_commands) {
                         throw new Error('命令が許可されていません。');
                     }
                     if (ifContinue.checked) {
@@ -264,7 +266,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     }
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
-                    allowApply = false;
+                    request = false;
                 }
                 catch (e) {
                     console.error(e.name, e.message)
@@ -308,11 +310,11 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             peer.on('connection', dataConnection => {
                 dataConnection.once('open', async () => {
                     messages.textContent += `=== DataConnection has been opened ===\n`;
-                    while(!allowApply){
+                    while (!request) {
                         await _sleep(100);
                         console.log("waiting for allow..");
                     }
-                    command.allow_command = true;
+                    command.request = true;
                     const json_data = JSON.stringify(command);
                     dataConnection.send(json_data);
                 });
