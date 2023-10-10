@@ -2,7 +2,9 @@ const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
 const SERVER_ID = "Server";
 const CLIENT_ID = "Client";
-let allowContinue, attempts, forwardDistance;
+let allowContinue = false;
+let attempts = 0;
+let forwardDistance = 0;
 let request = false;
 let response = false;
 const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -222,7 +224,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             dataConnection.on('data', data => {
                 command = JSON.parse(data);
-                if(command.request){
+                if (command.request) {
                     time = getTime();
                     messages.textContent += `${time}\tPlease response command!!\n`;
                 }
