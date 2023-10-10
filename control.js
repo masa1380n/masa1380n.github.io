@@ -33,7 +33,7 @@ function roslib() {
     pruningAssistServer.advertise((req, res) => {
         console.log(req.call)
         console.log("service call");
-        while(ture)
+        while(true)
         {
             if(!response){
                 break;
