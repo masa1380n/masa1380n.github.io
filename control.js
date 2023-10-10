@@ -222,6 +222,10 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             dataConnection.on('data', data => {
                 command = JSON.parse(data);
+                if(command.request){
+                    time = getTime();
+                    messages.textContent += `${time}\tPlease response command!!\n`;
+                }
             });
 
             dataConnection.once('close', () => {
@@ -263,6 +267,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     }
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
+                    response = true;
                     request = false;
                 }
                 catch (e) {
