@@ -41,8 +41,8 @@ function roslib() {
 }
 
 (async function main() {
-    const server = document.getElementById('js-server');
-    const client = document.getElementById('js-client');
+    const serverTrigger = document.getElementById('js-server');
+    const clientTrigger = document.getElementById('js-client');
     const serverComp = document.getElementById('js-server-component');
     const clientComp = document.getElementById('js-client-component');
     let localVideo = document.getElementById('js-local-stream');
@@ -72,8 +72,8 @@ function roslib() {
         }
     }
 
-    server.addEventListener('click', () => {
-        // new roslib();
+    serverTrigger.addEventListener('click', () => {
+        new roslib();
         switchComponent(serverComp);
         peer = (window.peer = new Peer(SERVER_ID,
             {
@@ -85,7 +85,7 @@ function roslib() {
         waitCall();
     });
 
-    client.addEventListener('click', () => {
+    clientTrigger.addEventListener('click', () => {
         switchComponent(clientComp);
         peer = (window.peer = new Peer(CLIENT_ID,
             {
