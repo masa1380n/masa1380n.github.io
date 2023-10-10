@@ -267,8 +267,6 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     }
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
-                    response = true;
-                    request = false;
                 }
                 catch (e) {
                     console.error(e.name, e.message)
@@ -341,6 +339,8 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
                     }
                     time = getTime();
                     messages.textContent += `${time}\t${text}\n`;
+                    response = true;
+                    request = false;
                 });
 
                 dataConnection.once('close', () => {
