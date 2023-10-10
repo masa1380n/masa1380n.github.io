@@ -1,6 +1,6 @@
 const API_KEY = "fa68552a-9f2d-43da-9fa9-27f69eedcff6";
 const Peer = window.Peer;
-const SERVER_ID = "RemoteMonitorServer";
+const SERVER_ID = "Server";
 const CLIENT_ID = "RemoteMonitorClient";
 let Allow_continue, Attempts, Forward_distance;
 let allowApply = false;
@@ -64,15 +64,15 @@ function roslib() {
     let dataConnection = null;
     let videoTrack;
 
-    let switchComponent = (el)=> {
+    let switchComponent = (el) => {
 
-        if(el.style.display==''){
-          el.style.display='none';
-        }else{
-          el.style.display='';
+        if (el.style.display == '') {
+            el.style.display = 'none';
+        } else {
+            el.style.display = '';
         }
-      
-      }
+
+    }
 
     server.addEventListener('click', () => {
         // new roslib();

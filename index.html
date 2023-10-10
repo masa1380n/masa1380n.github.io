@@ -18,17 +18,22 @@
   <div id="header">
     <h1>Remote pruning assist system</h1>
   </div>
-  <div class="p2p-media">
-    <div class="switch-server-client">
+  <div id="p2p-media">
+    <div id="switch-server-client">
       <button id="js-server">Server</button>
       <button id="js-client">Client</button>
+    </div>
+    <div id="peer">
+      <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
+        <button id="js-makepeer-trigger">Make Peer</button>
+      <p>Your ID: <span id="js-local-id"></span></p>
     </div>
     <!-- client -->
     <div id="js-client-component" style="display:none;">
       <video id="js-remote-stream" width="480" height="320"></video><br>
-      <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
+      <!-- <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
         <button id="js-makepeer-trigger">Make Peer</button>
-      <p>Your ID: <span id="js-local-id"></span></p>
+      <p>Your ID: <span id="js-local-id"></span></p> -->
       <button id="js-call-trigger">Call</button>
       <button id="js-close-trigger">Close</button><br>
       <p>Continue:<input type="checkbox" id="js-continue">
@@ -40,16 +45,16 @@
     <!-- server -->
     <div id="js-server-component" style="display:none;">
       <video id="js-local-stream" width="480" height="320"></video><br>
-      <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
+      <!-- <p>your name. <input type="text" placeholder="Kimino nawa." id="js-your-id">
         <button id="js-makepeer-trigger">Make Peer</button>
-      <p>Your ID: <span id="js-local-id"></span></p>
+      <p>Your ID: <span id="js-local-id"></span></p> -->
       SelectDevice:<select id="cameraSelect" disabled> </select><br>
       <button id="js-startcapture-trigger">Get Capture</button>
       <button id="js-deletecapture-trigger">Delete Capture Source</button><br>
     </div>
-    <div class="p2p-data">
-      <pre class="messages" id="js-messages"></pre>
-    </div>
+  </div>
+  <div id="p2p-data">
+    <pre class="messages" id="js-messages"></pre>
   </div>
 </body>
 
