@@ -84,16 +84,16 @@ function roslib() {
     });
 
     makePeerTrigger.addEventListener('click', () => {
-        // var userName = document.getElementById('js-your-id').value;
-        // console.log(userName);
-        peer = (window.peer = new Peer(SERVER_ID,
+        var userName = document.getElementById('js-your-id').value;
+        console.log(userName);
+        peer = (window.peer = new Peer(userName,
             {
                 key: API_KEY,
                 debug: 3
             }
         ))
         //document.getElementById('js-local-id') = String(peer);
-        peer.on('open', id => SERVER_ID);
+        peer.on('open', id => (localId.textContent = id));
         waitCall();
     });
 
