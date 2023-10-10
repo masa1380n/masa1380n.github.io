@@ -65,7 +65,7 @@ const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             res.allow_continue = allowContinue;
             res.attempts = attempts;
             res.forward_distance = forwardDistance;
-            sendCommand = false;
+            response = false;
             return true;
         });
     }
