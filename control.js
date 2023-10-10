@@ -33,7 +33,7 @@ function roslib() {
             allowApply = true;
             console.log("service call");
         }
-        res.allow_continue = allowContinue;
+        res.allow_continue = true;
         res.attempts = attempts;
         res.forward_distance = forwardDistance;
         return true;
