@@ -43,21 +43,20 @@ function roslib() {
 (async function main() {
     const serverTrigger = document.getElementById('js-server');
     const clientTrigger = document.getElementById('js-client');
+    const mode = document.getElementById('js-mode');
     const serverComp = document.getElementById('js-server-component');
     const clientComp = document.getElementById('js-client-component');
     let localVideo = document.getElementById('js-local-stream');
-    const mode = document.getElementById('js-mode');
-    const makePeerTrigger = document.getElementById('js-makepeer-trigger');
+    const remoteVideo = document.getElementById('js-remote-stream');
     const captureTrigger = document.getElementById('js-startcapture-trigger');
     const deleteCapturteTrigger = document.getElementById('js-deletecapture-trigger');
     const callTrigger = document.getElementById('js-call-trigger');
     const closeTrigger = document.getElementById('js-close-trigger');
-    const remoteVideo = document.getElementById('js-remote-stream');
-    const messages = document.getElementById('js-messages');
     const ifContinue = document.getElementById('js-continue');
     const attempts = document.getElementById('js-attempts');
     const forward = document.getElementById('js-forward');
     const commandTrigger = document.getElementById('js-command-trigger');
+    const messages = document.getElementById('js-messages');
     let peer = null
     let targetDevice = null;
     let mediaConnection = null;
