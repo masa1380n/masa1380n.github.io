@@ -7,45 +7,45 @@ let request = false;
 let response = false;
 // const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// function roslib() {
-//     const ros = new ROSLIB.Ros({
-//         url: 'ws://192.168.6.112:9090'
-//     });
+function roslib() {
+    const ros = new ROSLIB.Ros({
+        url: 'ws://192.168.6.112:9090'
+    });
 
-//     ros.on('connection', () => {
-//         console.log('Connected to websocket server');
-//     });
+    ros.on('connection', () => {
+        console.log('Connected to websocket server');
+    });
 
-//     ros.on('error', error => {
-//         console.log('Error connecting to websocket server: ', error);
-//     });
+    ros.on('error', error => {
+        console.log('Error connecting to websocket server: ', error);
+    });
 
-//     ros.on('close', () => {
-//         console.log("Connection to websocket server was closed");
-//     });
+    ros.on('close', () => {
+        console.log("Connection to websocket server was closed");
+    });
 
-//     const pruningAssistServer = new ROSLIB.Service({
-//         ros: ros,
-//         name: '/PruningAssist',
-//         serviceType: 'fanuc_manipulation/PruningAssist',
-//     });
+    const pruningAssistServer = new ROSLIB.Service({
+        ros: ros,
+        name: '/PruningAssist',
+        serviceType: 'fanuc_manipulation/PruningAssist',
+    });
 
-//     pruningAssistServer.advertise((req, res) => {
-//         console.log(req.call)
-//         console.log("service call");
-//         request = true;
-//         let id = window.setInterval(function () {
-//             if(response){
-//                 res.allow_continue = true;
-//                 res.attempts = 1;
-//                 res.forward_distance = 0.2;
-//                 response = false;
-//                 window.clearInterval(id);
-//             }
-//         }, 100);
-//         return true;
-//     });
-// }
+    pruningAssistServer.advertise((req, res) => {
+        console.log(req.call)
+        console.log("service call");
+        request = true;
+        let id = window.setInterval(function () {
+            if(response){
+                res.allow_continue = true;
+                res.attempts = 1;
+                res.forward_distance = 0.2;
+                response = false;
+                window.clearInterval(id);
+            }
+        }, 100);
+        return true;
+    });
+}
 
 (async function main() {
     const serverTrigger = document.getElementById('js-server');
@@ -64,7 +64,6 @@ let response = false;
     const forward = document.getElementById('js-forward');
     const commandTrigger = document.getElementById('js-command-trigger');
     const messages = document.getElementById('js-messages');
-    const fakeTrigger = document.getElementById('js-fake-trigger');
     let peer = null
     let targetDevice = null;
     let mediaConnection = null;
@@ -81,7 +80,7 @@ let response = false;
     }
 
     serverTrigger.addEventListener('click', () => {
-        // new roslib();
+        new roslib();
         switchComponent(serverComp);
         peer = (window.peer = new Peer(SERVER_ID,
             {
@@ -148,8 +147,6 @@ let response = false;
     };
 
     let videoCallOptions = {
-        // videoBandwidth: Number(document.getElementById('js-video-byte').value),
-        // videoCodec: String(document.getElementById('js-video-codec').value),
         audioCodec: "opus"
     };
 
@@ -159,9 +156,6 @@ let response = false;
         navigator.mediaDevices.getUserMedia({
             audio: false,
             video: {
-                // width: Number(document.getElementById('video-width').value),
-                // height: Number(document.getElementById('video-height').value),
-                // frameRate: Number(document.getElementById('video-rate').value),
                 deviceId: String(targetDevice),
             }
         }).then(function (mediaStream) {
@@ -170,9 +164,6 @@ let response = false;
             localVideo.playsInline = true;
             localVideo.play().catch(console.error);
             videoTrack = localStream.getTracks()[1];//[0]is audio,[1]is video
-            // videoTrackSettings = videoTrack.getSettings();
-            capabilities = videoTrack.getCapabilities();
-            // videoTrack.contentHint = document.getElementById("js-video-content").value;
         })
     })
 
@@ -240,17 +231,17 @@ let response = false;
                     time = getTime();
                     if (ifContinue.checked) {
                         if (attemptExpected.value > 0 || forward.value > 0) {
-                            messages.textContent += `${time}\tError:Command is duplicated!!\n`;
+                            messages.textContent += `${time}\tError : Command is duplicated!!\n`;
                             throw new Error('命令が重複しています。');
                         }
                     }
                     else {
                         if (attemptExpected.value > 0 && forward.value > 0) {
-                            messages.textContent += `${time}\tError:Command is duplicated!!\n`;
+                            messages.textContent += `${time}\tError : Command is duplicated!!\n`;
                             throw new Error('命令が重複しています。');
                         }
                         else if (attemptExpected.value == 0 && forward.value == 0) {
-                            messages.textContent += `${time}\tError:Command is not selected!!\n`;
+                            messages.textContent += `${time}\tError : Command is not selected!!\n`;
                             throw new Error('命令が選択されていません。')
                         }
                     }
@@ -272,7 +263,7 @@ let response = false;
                         text = `go ${forward.value} m forward`;
                         forward.value = 0;
                     }
-                    messages.textContent += `${time}\ttrying to ${text}...\n`;
+                    messages.textContent += `${time}\tTrying to ${text}...\n`;
                 }
                 catch (e) {
                     console.error(e.name, e.message)
@@ -288,14 +279,8 @@ let response = false;
             peer.on('call', mediaConnection => {
 
                 let videoAnswerOptions = {
-                    // videoBandwidth: Number(document.getElementById('js-video-byte').value),
-                    // videoCodec: String(document.getElementById('js-video-codec').value),
                     audioCodec: "opus"
                 };
-                // videoAnswerOptions.videoBandwidth = Number(document.getElementById('js-video-byte').value);
-                //videoAnswerOptions.videoCodec = String(document.getElementById('js-video-codec').value);
-                //console.log(videoAnswerOptions);
-
                 mediaConnection.answer(localStream, videoAnswerOptions);
 
                 mediaConnection.on('stream', async (stream) => {
@@ -344,7 +329,7 @@ let response = false;
                         dataConnection.send(true);
                     }
                     else {
-                        messages.textContent += `${time}\tReceived command but it is not executed.`
+                        messages.textContent += `${time}\tReceived command but it is not executed.\n`
                         dataConnection.send(false);
                         request = true;
                     }
