@@ -5,56 +5,47 @@ const CLIENT_ID = "Client";
 let allowContinue, attempts, forwardDistance;
 let request = false;
 let response = false;
-const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function roslib() {
-    const ros = new ROSLIB.Ros({
-        url: 'ws://192.168.6.112:9090'
-    });
+// function roslib() {
+//     const ros = new ROSLIB.Ros({
+//         url: 'ws://192.168.6.112:9090'
+//     });
 
-    ros.on('connection', () => {
-        console.log('Connected to websocket server');
-    });
+//     ros.on('connection', () => {
+//         console.log('Connected to websocket server');
+//     });
 
-    ros.on('error', error => {
-        console.log('Error connecting to websocket server: ', error);
-    });
+//     ros.on('error', error => {
+//         console.log('Error connecting to websocket server: ', error);
+//     });
 
-    ros.on('close', () => {
-        console.log("Connection to websocket server was closed");
-    });
+//     ros.on('close', () => {
+//         console.log("Connection to websocket server was closed");
+//     });
 
-    const pruningAssistServer = new ROSLIB.Service({
-        ros: ros,
-        name: '/PruningAssist',
-        serviceType: 'fanuc_manipulation/PruningAssist',
-    });
+//     const pruningAssistServer = new ROSLIB.Service({
+//         ros: ros,
+//         name: '/PruningAssist',
+//         serviceType: 'fanuc_manipulation/PruningAssist',
+//     });
 
-    pruningAssistServer.advertise((req, res) => {
-        console.log(req.call)
-        console.log("service call");
-        request = true;
-        while(true)
-        {
-            if(response){
-                break;
-            }
-        }
-        // while (!response) {
-        //     await _sleep(100);
-        //     console.log("waiting for command..")
-        // }
-        // if(req.call)
-        // {
-        //     console.log('true')
-        // }
-        res.allow_continue = true;
-        res.attempts = 1;
-        res.forward_distance = 0.2;
-        response = false;
-        return true;
-    });
-} 
+//     pruningAssistServer.advertise((req, res) => {
+//         console.log(req.call)
+//         console.log("service call");
+//         request = true;
+//         let id = window.setInterval(function () {
+//             if(response){
+//                 res.allow_continue = true;
+//                 res.attempts = 1;
+//                 res.forward_distance = 0.2;
+//                 response = false;
+//                 window.clearInterval(id);
+//             }
+//         }, 100);
+//         return true;
+//     });
+// }
 
 (async function main() {
     const serverTrigger = document.getElementById('js-server');
@@ -73,6 +64,7 @@ function roslib() {
     const forward = document.getElementById('js-forward');
     const commandTrigger = document.getElementById('js-command-trigger');
     const messages = document.getElementById('js-messages');
+    const fakeTrigger = document.getElementById('js-fake-trigger');
     let peer = null
     let targetDevice = null;
     let mediaConnection = null;
@@ -89,7 +81,7 @@ function roslib() {
     }
 
     serverTrigger.addEventListener('click', () => {
-        new roslib();
+        // new roslib();
         switchComponent(serverComp);
         peer = (window.peer = new Peer(SERVER_ID,
             {
@@ -189,8 +181,6 @@ function roslib() {
         localVideo.srcObject = null;
     })
 
-    let command = { continue: false, attempt: 0, forward: 0, request: false };
-
     //Time stamp
     function getTime() {
         var date = new Date();
@@ -229,13 +219,12 @@ function roslib() {
                 commandTrigger.addEventListener('click', onClickApply);
             });
 
-            let command;
-
             dataConnection.on('data', data => {
-                command = JSON.parse(data);
-                if (command.request) {
-                    time = getTime();
-                    messages.textContent += `${time}\tPlease response command!!\n`;
+                time = getTime();
+                if (data) {
+                    messages.textContent += `${time}\tCommand applied!!\n`;
+                } else {
+                    messages.textContent += `${time}\tCommand rejected!!\n`;
                 }
             });
 
@@ -245,11 +234,9 @@ function roslib() {
                 commandTrigger.removeEventListener('click', onClickApply);
             });
 
+            //when apply pushed
             function onClickApply() {
                 try {
-                    if (!command.request) {
-                        throw new Error('命令が許可されていません。');
-                    }
                     if (ifContinue.checked) {
                         if (attemptExpected.value > 0 || forward.value > 0) {
                             throw new Error('命令が重複しています。');
@@ -260,25 +247,26 @@ function roslib() {
                             throw new Error('命令が重複しています。');
                         }
                     }
+                    let command = { continue: false, attempt: 0, forward: 0 };
                     command.continue = ifContinue.checked;
                     command.attempt = attemptExpected.value;
                     command.forward = forward.value;
                     const json_data = JSON.stringify(command);
                     dataConnection.send(json_data);
                     if (ifContinue.checked) {
-                        text = `Continue pruning!`;
+                        text = `continue pruning`;
                         ifContinue.checked = false;
                     }
                     else if (attemptExpected.value > 0) {
-                        text = `Attempt more ${attemptExpected.value} time!`;
+                        text = `attempt more ${attemptExpected.value} time`;
                         attemptExpected.value = 0;
                     }
                     else if (forward.value > 0) {
-                        text = `go ${forward.value} m forward!`;
+                        text = `go ${forward.value} m forward`;
                         forward.value = 0;
                     }
                     time = getTime();
-                    messages.textContent += `${time}\t${text}\n`;
+                    messages.textContent += `${time}\ttrying to ${text}...\n`;
                 }
                 catch (e) {
                     console.error(e.name, e.message)
@@ -319,38 +307,40 @@ function roslib() {
                 closeTrigger.addEventListener('click', () => mediaConnection.close(true));
             });
 
+
+
             peer.on('connection', dataConnection => {
                 dataConnection.once('open', async () => {
                     time = getTime();
                     messages.textContent += `${time}\tDataConnection has been opened.\n`;
-                    while (!request) {
-                        await _sleep(100);
-                        console.log("waiting for allow..");
-                    }
-                    command.request = true;
-                    const json_data = JSON.stringify(command);
-                    dataConnection.send(json_data);
                 });
 
                 dataConnection.on('data', data => {
-                    let command = JSON.parse(data);
-                    let text = ``;
-                    if (command.continue) {
-                        text = `Continue pruning!`;
+                    if (request) {
+                        let command = JSON.parse(data);
+                        let text = ``;
+                        if (command.continue) {
+                            text = `Continue pruning!`;
+                        }
+                        else if (command.attempt > 0) {
+                            text = `Attempt more ${command.attempt} time!`;
+                        }
+                        else if (command.forward > 0) {
+                            text = `Go ${command.forward} m forward!`;
+                        }
+                        allowContinue = command.continue;
+                        attempts = command.attempt;
+                        forwardDistance = command.forward;
+                        time = getTime();
+                        messages.textContent += `${time}\t${text}\n`;
+                        response = true;
+                        request = false;
+                        dataConnection.send(true);
                     }
-                    else if (command.attempt > 0) {
-                        text = `Attempt more ${command.attempt} time!`;
+                    else {
+                        dataConnection.send(false);
+                        request = true;
                     }
-                    else if (command.forward > 0) {
-                        text = `go ${command.forward} m forward!`;
-                    }
-                    allowContinue = command.continue;
-                    attempts = command.attempt;
-                    forwardDistance = command.forward;
-                    time = getTime();
-                    messages.textContent += `${time}\t${text}\n`;
-                    response = true;
-                    request = false;
                 });
 
                 dataConnection.once('close', () => {
