@@ -170,7 +170,7 @@ let response = false;
             localVideo.playsInline = true;
             localVideo.play().catch(console.error);
             videoTrack = localStream.getTracks()[1];//[0]is audio,[1]is video
-            videoTrackSettings = videoTrack.getSettings();
+            // videoTrackSettings = videoTrack.getSettings();
             capabilities = videoTrack.getCapabilities();
             // videoTrack.contentHint = document.getElementById("js-video-content").value;
         })
@@ -237,14 +237,21 @@ let response = false;
             //when apply pushed
             function onClickApply() {
                 try {
+                    time = getTime();
                     if (ifContinue.checked) {
                         if (attemptExpected.value > 0 || forward.value > 0) {
+                            messages.textContent += `${time}\tError:Command is duplicated!!\n`;
                             throw new Error('命令が重複しています。');
                         }
                     }
                     else {
                         if (attemptExpected.value > 0 && forward.value > 0) {
+                            messages.textContent += `${time}\tError:Command is duplicated!!\n`;
                             throw new Error('命令が重複しています。');
+                        }
+                        else if (attemptExpected.value == 0 && forward.value == 0) {
+                            messages.textContent += `${time}\tError:Command is not selected!!\n`;
+                            throw new Error('命令が選択されていません。')
                         }
                     }
                     let command = { continue: false, attempt: 0, forward: 0 };
@@ -265,7 +272,6 @@ let response = false;
                         text = `go ${forward.value} m forward`;
                         forward.value = 0;
                     }
-                    time = getTime();
                     messages.textContent += `${time}\ttrying to ${text}...\n`;
                 }
                 catch (e) {
@@ -316,6 +322,7 @@ let response = false;
                 });
 
                 dataConnection.on('data', data => {
+                    time = getTime();
                     if (request) {
                         let command = JSON.parse(data);
                         let text = ``;
@@ -331,13 +338,13 @@ let response = false;
                         allowContinue = command.continue;
                         attempts = command.attempt;
                         forwardDistance = command.forward;
-                        time = getTime();
                         messages.textContent += `${time}\t${text}\n`;
                         response = true;
                         request = false;
                         dataConnection.send(true);
                     }
                     else {
+                        messages.textContent += `${time}\tReceived command but it is not executed.`
                         dataConnection.send(false);
                         request = true;
                     }
