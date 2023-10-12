@@ -35,6 +35,7 @@ function roslib() {
         _request = true;
         tmp=true;
         // var interval = 
+        var date = new Date();
         let unixtime = date.getTime();
         console.log(unixtime);
         let id = window.setInterval(function (tmp_) {
