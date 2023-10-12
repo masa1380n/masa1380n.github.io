@@ -54,16 +54,16 @@ let _response = false;
         });
 
         pruningAssistServer.advertise((req, res) => {
-            console.log(req.call)
             console.log("service call");
             _request = true;
             let id = window.setInterval(function () {
                 if (_response) {
-                    res.allow_continue = true;
-                    res.attempts = 1;
-                    res.forward_distance = 0.2;
+                    console.log("response");
+                    res.allow_continue = allowContinue;
+                    res.attempts = attempts;
+                    res.forward_distance = forwardDistance;
                     _response = false;
-                    window.clearInterval(id);
+                    // window.clearInterval(id);
                     return true;
                 }
             }, 500);
