@@ -35,15 +35,15 @@ function roslib() {
         console.log("service call");
         request = true;
         let id = window.setInterval(function () {
-            if(response){
+            if (response) {
                 res.allow_continue = true;
                 res.attempts = 1;
                 res.forward_distance = 0.2;
                 response = false;
                 window.clearInterval(id);
+                return true;
             }
-        }, 100);
-        return true;
+        }, 500);
     });
 }
 
@@ -331,7 +331,6 @@ function roslib() {
                     else {
                         messages.textContent += `${time}\tReceived command but it is not executed.\n`
                         dataConnection.send(false);
-                        request = true;
                     }
                 });
 
