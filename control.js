@@ -47,6 +47,12 @@ function roslib() {
                 // window.clearInterval(id);
                 return true;
             }
+            else{
+                res.allow_continue = true;
+                res.attempts = 1;
+                res.forward_distance = 0.2;
+                return true;
+            }
         }, 500);
     });
 }
