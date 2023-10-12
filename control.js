@@ -35,9 +35,9 @@ function roslib() {
         _request = true;
         tmp = true;
         // var interval = 
-        var date = new Date();
-        let unixtime = date.getTime();
-        console.log(unixtime);
+        // var date = new Date();
+        // let unixtime = date.getTime();
+        // console.log(unixtime);
         res.allow_continue = true;
         res.attempts = 1;
         res.forward_distance = 0.2;
