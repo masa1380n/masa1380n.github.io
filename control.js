@@ -33,8 +33,10 @@ function roslib() {
     pruningAssistServer.advertise((req, res) => {
         console.log("service call");
         _request = true;
-        let id = window.setInterval(function () {
-            if (_response) {
+        tmp=true;
+        // var interval = 
+        let id = window.setInterval(function (tmp_) {
+            if (tmp_) {
                 console.log("response");
                 // res.allow_continue = true;
                 // res.attempts = 1;
@@ -48,12 +50,13 @@ function roslib() {
                 return true;
             }
             else{
+                console.log('false');
                 res.allow_continue = true;
                 res.attempts = 1;
                 res.forward_distance = 0.2;
                 return true;
             }
-        }, 500);
+        }, 500,tmp);
     });
 }
 
