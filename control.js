@@ -9,7 +9,7 @@ let _response = false;
 
 function roslib() {
     const ros = new ROSLIB.Ros({
-        url: 'ws://192.168.6.184:9090'
+        url: 'ws://192.168.6.104:9090'
     });
 
     ros.on('connection', () => {
