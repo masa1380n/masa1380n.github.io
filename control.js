@@ -42,30 +42,30 @@ function roslib() {
         res.attempts = 1;
         res.forward_distance = 0.2;
         return true;
-        let id = window.setInterval(function (tmp_) {
-            let unixtime = date.getTime();
-            console.log(unixtime);
-            if (tmp_) {
-                console.log("response");
-                // res.allow_continue = true;
-                // res.attempts = 1;
-                // res.forward_distance = 0.2;
-                res.allow_continue = allowContinue;
-                res.attempts = attempts;
-                res.forward_distance = forwardDistance;
-                console.log(res);
-                _response = false;
-                // window.clearInterval(id);
-                return true;
-            }
-            else {
-                console.log('false');
-                res.allow_continue = true;
-                res.attempts = 1;
-                res.forward_distance = 0.2;
-                return true;
-            }
-        }, 500, tmp);
+        // let id = window.setInterval(function (tmp_) {
+        //     let unixtime = date.getTime();
+        //     console.log(unixtime);
+        //     if (tmp_) {
+        //         console.log("response");
+        //         // res.allow_continue = true;
+        //         // res.attempts = 1;
+        //         // res.forward_distance = 0.2;
+        //         res.allow_continue = allowContinue;
+        //         res.attempts = attempts;
+        //         res.forward_distance = forwardDistance;
+        //         console.log(res);
+        //         _response = false;
+        //         // window.clearInterval(id);
+        //         return true;
+        //     }
+        //     else {
+        //         console.log('false');
+        //         res.allow_continue = true;
+        //         res.attempts = 1;
+        //         res.forward_distance = 0.2;
+        //         return true;
+        //     }
+        // }, 500, tmp);
     });
 }
 
