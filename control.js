@@ -33,20 +33,20 @@ function roslib() {
     pruningAssistServer.advertise((req, res) => {
         console.log("service call");
         _request = true;
-        // let id = window.setInterval(function () {
-        //     if (_response) {
-        console.log("response");
-        res.allow_continue = true;
-        res.attempts = 1;
-        res.forward_distance = 0.2;
-        // res.allow_continue = allowContinue;
-        // res.attempts = attempts;
-        // res.forward_distance = forwardDistance;
-        _response = false;
-        // window.clearInterval(id);
-        return true;
-        //     }
-        // }, 500);
+        let id = window.setInterval(function () {
+            if (_response) {
+                console.log("response");
+                // res.allow_continue = true;
+                // res.attempts = 1;
+                // res.forward_distance = 0.2;
+                res.allow_continue = allowContinue;
+                res.attempts = attempts;
+                res.forward_distance = forwardDistance;
+                _response = false;
+                // window.clearInterval(id);
+                return true;
+            }
+        }, 500);
     });
 }
 
