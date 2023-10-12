@@ -33,14 +33,18 @@ function roslib() {
     pruningAssistServer.advertise((req, res) => {
         console.log("service call");
         _request = true;
-        tmp=true;
+        tmp = true;
         // var interval = 
         var date = new Date();
         let unixtime = date.getTime();
         console.log(unixtime);
+        res.allow_continue = true;
+        res.attempts = 1;
+        res.forward_distance = 0.2;
+        return true;
         let id = window.setInterval(function (tmp_) {
             let unixtime = date.getTime();
-            console.log(unixtime);    
+            console.log(unixtime);
             if (tmp_) {
                 console.log("response");
                 // res.allow_continue = true;
@@ -54,14 +58,14 @@ function roslib() {
                 // window.clearInterval(id);
                 return true;
             }
-            else{
+            else {
                 console.log('false');
                 res.allow_continue = true;
                 res.attempts = 1;
                 res.forward_distance = 0.2;
                 return true;
             }
-        }, 500,tmp);
+        }, 500, tmp);
     });
 }
 
