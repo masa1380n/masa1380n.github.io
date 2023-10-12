@@ -42,6 +42,7 @@ function roslib() {
                 res.allow_continue = allowContinue;
                 res.attempts = attempts;
                 res.forward_distance = forwardDistance;
+                console.log(res);
                 _response = false;
                 // window.clearInterval(id);
                 return true;
