@@ -35,7 +35,11 @@ function roslib() {
         _request = true;
         tmp=true;
         // var interval = 
+        let unixtime = date.getTime();
+        console.log(unixtime);
         let id = window.setInterval(function (tmp_) {
+            let unixtime = date.getTime();
+            console.log(unixtime);    
             if (tmp_) {
                 console.log("response");
                 // res.allow_continue = true;
