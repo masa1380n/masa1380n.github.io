@@ -44,7 +44,7 @@ function roslib() {
         // res.forward_distance = forwardDistance;
         _response = false;
         // window.clearInterval(id);
-        return;
+        return true;
         //     }
         // }, 500);
     });
