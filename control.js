@@ -57,7 +57,7 @@ function roslib() {
                 res.forward_distance = forwardDistance;
                 console.log(res);
                 _response = false;
-                // window.clearInterval(id);
+                window.clearInterval(id);
                 return true;
             }
             else {
@@ -68,6 +68,7 @@ function roslib() {
                 return true;
             }
         }, 500, tmp);
+        return true;
     });
 }
 
