@@ -32,18 +32,20 @@ function roslib() {
         serviceType: 'fanuc_manipulation/PruningAssist',
     });
 
-    pruningAssistServer.advertise((req, res) => {
+    pruningAssistServer.advertise(async (req, res) => {
         console.log("service call");
         _request = true;
         tmp = true;
         // var interval = 
-        var date = new Date();
-        let unixtime = date.getTime();
-        while (!_response) {
-            res.allow_continue = true;
-            res.attempts = 1;
-            res.forward_distance = 0.2;
-        }
+        const promise = new Promise(resolve => {
+            while (!_response) {
+                console.log("waiting for response");
+            }
+        })
+        await promise;
+        res.allow_continue = true;
+        res.attempts = 1;
+        res.forward_distance = 0.2;
         return true;
         // console.log(unixtime);
         // res.allow_continue = true;
