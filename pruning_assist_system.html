@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pruning assist system</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.png">
+
+    <script src="./eventemitter2.js"></script>
+    <script src="./roslib.min.js"></script>
+
+    <!-- <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script> -->
+    <script src="./local_control.js" defer></script>
+</head>
+
+<body>
+    <div id="header">
+        <h1>Pruning assist system</h1>
+    </div>
+    <!-- <div id="p2p-media">
+    <div id="switch-server-client">
+      <button class="server-client" id="js-server">Server</button>
+      <button class="server-client" id="js-client">Client</button>
+    </div>
+    <div id="peer">
+      <p>Mode: <span id="js-mode"></span></p>
+    </div> -->
+    <!-- client -->
+    <!-- <div id="js-client-component" style="display:none;">
+      <video id="js-remote-stream" width="480" height="320"></video><br>
+      <button class="call-trigger" id="js-call-trigger">Call</button>
+      <button class="call-trigger" id="js-close-trigger">Close</button><br>
+      <p>Continue:<input type="checkbox" id="js-continue">
+        Attempts:<input type="number" id="js-attempts" step="1" min="0" value="0" style="width:50px">
+        Forward:<input type="number" id="js-forward" step="0.05" min="0" value="0" style="width:100px"> [m]
+        <button id="js-command-trigger">Apply</button> -->
+    <!-- </p>
+    </div> -->
+    <!-- server -->
+    <div id="js-server-component">
+        <video id="js-local-stream" width="480" height="320"></video><br>
+        SelectDevice:<select id="cameraSelect" disabled> </select><br>
+        <button calss="get-capture" id="js-startcapture-trigger">Get Capture</button>
+        <button calss="get-capture" id="js-deletecapture-trigger">Delete Capture Source</button><br>
+        <button id="js-connect-ros">Connect to websocket server</button>
+        <p>Continue:<input type="checkbox" id="js-continue">
+            Attempts:<input type="number" id="js-attempts" step="1" min="0" value="0" style="width:50px">
+            Forward:<input type="number" id="js-forward" step="0.05" min="0" value="0" style="width:100px"> [m]
+            <button id="js-command-trigger">Apply</button>
+        </p>
+    </div>
+    </div>
+    <div id="p2p-data">
+        <pre class="messages" id="js-messages"></pre>
+    </div>
+</body>
+
+</html>
